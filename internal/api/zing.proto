@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package api;
+
+import "internal/api/user.proto";
+import "internal/api/message.proto";
+
+option go_package = "github.com/djcopley/zing/api";
+
+service Zing {
+  // Login takes the username and password and returns a token for accessing messages
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  // Invalidates the user's tokens
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  // Takes a user's id and streams back the messages currently in the server queue
+  rpc GetMessages(GetMessagesRequest) returns (stream GetMessagesResponse);
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+message LoginResponse {
+  string id = 1;
+  string token = 2;
+}
+
+message LogoutRequest {}
+message LogoutResponse {}
+
+// GetMessageRequest sends the server the user's id and a token
+message GetMessagesRequest {
+  string id = 1;
+  string token = 2;
+}
+message GetMessagesResponse {
+  User sender = 1;
+  Message content = 2;
+}

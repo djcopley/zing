@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/djcopley/zing/api";
+
+import "google/protobuf/timestamp.proto";
+
+message Message {
+  string id = 1;
+  google.protobuf.Timestamp time = 2;
+  string content = 3;
+}
