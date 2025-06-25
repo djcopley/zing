@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/djcopley/zing/internal/api"
+	"github.com/djcopley/zing/api"
 	"google.golang.org/grpc"
 )
 
@@ -13,7 +13,6 @@ type Server struct {
 }
 
 func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.LoginResponse, error) {
-
 	//TODO implement me
 	panic("implement me")
 }
