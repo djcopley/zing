@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: internal/api/zing.proto
+// source: api/zing.proto
 
 package api
 
@@ -22,6 +22,7 @@ const (
 	Zing_Login_FullMethodName       = "/api.Zing/Login"
 	Zing_Logout_FullMethodName      = "/api.Zing/Logout"
 	Zing_GetMessages_FullMethodName = "/api.Zing/GetMessages"
+	Zing_SendMessage_FullMethodName = "/api.Zing/SendMessage"
 )
 
 // ZingClient is the client API for Zing service.
@@ -34,6 +35,7 @@ type ZingClient interface {
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
 	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetMessagesResponse], error)
+	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
 
 type zingClient struct {
@@ -83,6 +85,16 @@ func (c *zingClient) GetMessages(ctx context.Context, in *GetMessagesRequest, op
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Zing_GetMessagesClient = grpc.ServerStreamingClient[GetMessagesResponse]
 
+func (c *zingClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendMessageResponse)
+	err := c.cc.Invoke(ctx, Zing_SendMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ZingServer is the server API for Zing service.
 // All implementations must embed UnimplementedZingServer
 // for forward compatibility.
@@ -93,6 +105,7 @@ type ZingServer interface {
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
 	GetMessages(*GetMessagesRequest, grpc.ServerStreamingServer[GetMessagesResponse]) error
+	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	mustEmbedUnimplementedZingServer()
 }
 
@@ -111,6 +124,9 @@ func (UnimplementedZingServer) Logout(context.Context, *LogoutRequest) (*LogoutR
 }
 func (UnimplementedZingServer) GetMessages(*GetMessagesRequest, grpc.ServerStreamingServer[GetMessagesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
+}
+func (UnimplementedZingServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
 }
 func (UnimplementedZingServer) mustEmbedUnimplementedZingServer() {}
 func (UnimplementedZingServer) testEmbeddedByValue()              {}
@@ -180,6 +196,24 @@ func _Zing_GetMessages_Handler(srv interface{}, stream grpc.ServerStream) error 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Zing_GetMessagesServer = grpc.ServerStreamingServer[GetMessagesResponse]
 
+func _Zing_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZingServer).SendMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Zing_SendMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ZingServer).SendMessage(ctx, req.(*SendMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Zing_ServiceDesc is the grpc.ServiceDesc for Zing service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -195,6 +229,10 @@ var Zing_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Logout",
 			Handler:    _Zing_Logout_Handler,
 		},
+		{
+			MethodName: "SendMessage",
+			Handler:    _Zing_SendMessage_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -203,5 +241,5 @@ var Zing_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "internal/api/zing.proto",
+	Metadata: "api/zing.proto",
 }

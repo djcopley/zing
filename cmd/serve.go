@@ -6,8 +6,8 @@ import (
 	"github.com/djcopley/zing/server"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
+	"log"
 	"net"
-	"os"
 )
 
 func init() {
@@ -18,16 +18,16 @@ var serveCommand = &cobra.Command{
 	Use:   "serve",
 	Short: "Serve the zing server",
 	Run: func(cmd *cobra.Command, args []string) {
-		lis, err := net.Listen("tcp", ":8080")
+		addr := fmt.Sprintf("%s:%d", host, port)
+		log.Printf("starting zing server @ %s\n", addr)
+		lis, err := net.Listen("tcp", fmt.Sprintf("%s", addr))
 		if err != nil {
-			fmt.Printf("failed to listen: %v", err)
-			os.Exit(1)
+			log.Fatalf("failed to listen: %v", err)
 		}
 		s := grpc.NewServer()
 		api.RegisterZingServer(s, &server.Server{})
 		if err := s.Serve(lis); err != nil {
-			fmt.Printf("failed to serve: %v", err)
-			os.Exit(1)
+			log.Fatalf("failed to serve: %v", err)
 		}
 	},
 }

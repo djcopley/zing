@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.29.3
-// source: internal/api/zing.proto
+// source: api/zing.proto
 
 package api
 
@@ -31,7 +31,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_internal_api_zing_proto_msgTypes[0]
+	mi := &file_api_zing_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[0]
+	mi := &file_api_zing_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{0}
+	return file_api_zing_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *LoginRequest) GetUsername() string {
@@ -83,7 +83,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_internal_api_zing_proto_msgTypes[1]
+	mi := &file_api_zing_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -95,7 +95,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[1]
+	mi := &file_api_zing_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +108,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{1}
+	return file_api_zing_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *LoginResponse) GetId() string {
@@ -127,13 +127,14 @@ func (x *LoginResponse) GetToken() string {
 
 type LogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LogoutRequest) Reset() {
 	*x = LogoutRequest{}
-	mi := &file_internal_api_zing_proto_msgTypes[2]
+	mi := &file_api_zing_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -145,7 +146,7 @@ func (x *LogoutRequest) String() string {
 func (*LogoutRequest) ProtoMessage() {}
 
 func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[2]
+	mi := &file_api_zing_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -158,7 +159,14 @@ func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{2}
+	return file_api_zing_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LogoutRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
 }
 
 type LogoutResponse struct {
@@ -169,7 +177,7 @@ type LogoutResponse struct {
 
 func (x *LogoutResponse) Reset() {
 	*x = LogoutResponse{}
-	mi := &file_internal_api_zing_proto_msgTypes[3]
+	mi := &file_api_zing_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -181,7 +189,7 @@ func (x *LogoutResponse) String() string {
 func (*LogoutResponse) ProtoMessage() {}
 
 func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[3]
+	mi := &file_api_zing_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -194,7 +202,7 @@ func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogoutResponse.ProtoReflect.Descriptor instead.
 func (*LogoutResponse) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{3}
+	return file_api_zing_proto_rawDescGZIP(), []int{3}
 }
 
 // GetMessageRequest sends the server the user's id and a token
@@ -208,7 +216,7 @@ type GetMessagesRequest struct {
 
 func (x *GetMessagesRequest) Reset() {
 	*x = GetMessagesRequest{}
-	mi := &file_internal_api_zing_proto_msgTypes[4]
+	mi := &file_api_zing_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -220,7 +228,7 @@ func (x *GetMessagesRequest) String() string {
 func (*GetMessagesRequest) ProtoMessage() {}
 
 func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[4]
+	mi := &file_api_zing_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -233,7 +241,7 @@ func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMessagesRequest.ProtoReflect.Descriptor instead.
 func (*GetMessagesRequest) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{4}
+	return file_api_zing_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetMessagesRequest) GetId() string {
@@ -260,7 +268,7 @@ type GetMessagesResponse struct {
 
 func (x *GetMessagesResponse) Reset() {
 	*x = GetMessagesResponse{}
-	mi := &file_internal_api_zing_proto_msgTypes[5]
+	mi := &file_api_zing_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -272,7 +280,7 @@ func (x *GetMessagesResponse) String() string {
 func (*GetMessagesResponse) ProtoMessage() {}
 
 func (x *GetMessagesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_zing_proto_msgTypes[5]
+	mi := &file_api_zing_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -285,7 +293,7 @@ func (x *GetMessagesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMessagesResponse.ProtoReflect.Descriptor instead.
 func (*GetMessagesResponse) Descriptor() ([]byte, []int) {
-	return file_internal_api_zing_proto_rawDescGZIP(), []int{5}
+	return file_api_zing_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetMessagesResponse) GetSender() *User {
@@ -302,91 +310,191 @@ func (x *GetMessagesResponse) GetContent() *Message {
 	return nil
 }
 
-var File_internal_api_zing_proto protoreflect.FileDescriptor
+type SendMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	To            *User                  `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	Message       *Message               `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_internal_api_zing_proto_rawDesc = "" +
+func (x *SendMessageRequest) Reset() {
+	*x = SendMessageRequest{}
+	mi := &file_api_zing_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageRequest) ProtoMessage() {}
+
+func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_zing_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageRequest.ProtoReflect.Descriptor instead.
+func (*SendMessageRequest) Descriptor() ([]byte, []int) {
+	return file_api_zing_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SendMessageRequest) GetTo() *User {
+	if x != nil {
+		return x.To
+	}
+	return nil
+}
+
+func (x *SendMessageRequest) GetMessage() *Message {
+	if x != nil {
+		return x.Message
+	}
+	return nil
+}
+
+type SendMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendMessageResponse) Reset() {
+	*x = SendMessageResponse{}
+	mi := &file_api_zing_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageResponse) ProtoMessage() {}
+
+func (x *SendMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_zing_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageResponse.ProtoReflect.Descriptor instead.
+func (*SendMessageResponse) Descriptor() ([]byte, []int) {
+	return file_api_zing_proto_rawDescGZIP(), []int{7}
+}
+
+var File_api_zing_proto protoreflect.FileDescriptor
+
+const file_api_zing_proto_rawDesc = "" +
 	"\n" +
-	"\x17internal/api/zing.proto\x12\x03api\x1a\x17internal/api/user.proto\x1a\x1ainternal/api/message.proto\"F\n" +
+	"\x0eapi/zing.proto\x12\x03api\x1a\x0eapi/user.proto\x1a\x11api/message.proto\"F\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"5\n" +
 	"\rLoginResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05token\x18\x02 \x01(\tR\x05token\"\x0f\n" +
-	"\rLogoutRequest\"\x10\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\"\x1f\n" +
+	"\rLogoutRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x10\n" +
 	"\x0eLogoutResponse\":\n" +
 	"\x12GetMessagesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\"`\n" +
 	"\x13GetMessagesResponse\x12!\n" +
 	"\x06sender\x18\x01 \x01(\v2\t.api.UserR\x06sender\x12&\n" +
-	"\acontent\x18\x02 \x01(\v2\f.api.MessageR\acontent2\xad\x01\n" +
+	"\acontent\x18\x02 \x01(\v2\f.api.MessageR\acontent\"W\n" +
+	"\x12SendMessageRequest\x12\x19\n" +
+	"\x02to\x18\x01 \x01(\v2\t.api.UserR\x02to\x12&\n" +
+	"\amessage\x18\x02 \x01(\v2\f.api.MessageR\amessage\"\x15\n" +
+	"\x13SendMessageResponse2\xef\x01\n" +
 	"\x04Zing\x12.\n" +
 	"\x05Login\x12\x11.api.LoginRequest\x1a\x12.api.LoginResponse\x121\n" +
 	"\x06Logout\x12\x12.api.LogoutRequest\x1a\x13.api.LogoutResponse\x12B\n" +
-	"\vGetMessages\x12\x17.api.GetMessagesRequest\x1a\x18.api.GetMessagesResponse0\x01B\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
+	"\vGetMessages\x12\x17.api.GetMessagesRequest\x1a\x18.api.GetMessagesResponse0\x01\x12@\n" +
+	"\vSendMessage\x12\x17.api.SendMessageRequest\x1a\x18.api.SendMessageResponseB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
-	file_internal_api_zing_proto_rawDescOnce sync.Once
-	file_internal_api_zing_proto_rawDescData []byte
+	file_api_zing_proto_rawDescOnce sync.Once
+	file_api_zing_proto_rawDescData []byte
 )
 
-func file_internal_api_zing_proto_rawDescGZIP() []byte {
-	file_internal_api_zing_proto_rawDescOnce.Do(func() {
-		file_internal_api_zing_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_api_zing_proto_rawDesc), len(file_internal_api_zing_proto_rawDesc)))
+func file_api_zing_proto_rawDescGZIP() []byte {
+	file_api_zing_proto_rawDescOnce.Do(func() {
+		file_api_zing_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_zing_proto_rawDesc), len(file_api_zing_proto_rawDesc)))
 	})
-	return file_internal_api_zing_proto_rawDescData
+	return file_api_zing_proto_rawDescData
 }
 
-var file_internal_api_zing_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_internal_api_zing_proto_goTypes = []any{
+var file_api_zing_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_api_zing_proto_goTypes = []any{
 	(*LoginRequest)(nil),        // 0: api.LoginRequest
 	(*LoginResponse)(nil),       // 1: api.LoginResponse
 	(*LogoutRequest)(nil),       // 2: api.LogoutRequest
 	(*LogoutResponse)(nil),      // 3: api.LogoutResponse
 	(*GetMessagesRequest)(nil),  // 4: api.GetMessagesRequest
 	(*GetMessagesResponse)(nil), // 5: api.GetMessagesResponse
-	(*User)(nil),                // 6: api.User
-	(*Message)(nil),             // 7: api.Message
+	(*SendMessageRequest)(nil),  // 6: api.SendMessageRequest
+	(*SendMessageResponse)(nil), // 7: api.SendMessageResponse
+	(*User)(nil),                // 8: api.User
+	(*Message)(nil),             // 9: api.Message
 }
-var file_internal_api_zing_proto_depIdxs = []int32{
-	6, // 0: api.GetMessagesResponse.sender:type_name -> api.User
-	7, // 1: api.GetMessagesResponse.content:type_name -> api.Message
-	0, // 2: api.Zing.Login:input_type -> api.LoginRequest
-	2, // 3: api.Zing.Logout:input_type -> api.LogoutRequest
-	4, // 4: api.Zing.GetMessages:input_type -> api.GetMessagesRequest
-	1, // 5: api.Zing.Login:output_type -> api.LoginResponse
-	3, // 6: api.Zing.Logout:output_type -> api.LogoutResponse
-	5, // 7: api.Zing.GetMessages:output_type -> api.GetMessagesResponse
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+var file_api_zing_proto_depIdxs = []int32{
+	8, // 0: api.GetMessagesResponse.sender:type_name -> api.User
+	9, // 1: api.GetMessagesResponse.content:type_name -> api.Message
+	8, // 2: api.SendMessageRequest.to:type_name -> api.User
+	9, // 3: api.SendMessageRequest.message:type_name -> api.Message
+	0, // 4: api.Zing.Login:input_type -> api.LoginRequest
+	2, // 5: api.Zing.Logout:input_type -> api.LogoutRequest
+	4, // 6: api.Zing.GetMessages:input_type -> api.GetMessagesRequest
+	6, // 7: api.Zing.SendMessage:input_type -> api.SendMessageRequest
+	1, // 8: api.Zing.Login:output_type -> api.LoginResponse
+	3, // 9: api.Zing.Logout:output_type -> api.LogoutResponse
+	5, // 10: api.Zing.GetMessages:output_type -> api.GetMessagesResponse
+	7, // 11: api.Zing.SendMessage:output_type -> api.SendMessageResponse
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_internal_api_zing_proto_init() }
-func file_internal_api_zing_proto_init() {
-	if File_internal_api_zing_proto != nil {
+func init() { file_api_zing_proto_init() }
+func file_api_zing_proto_init() {
+	if File_api_zing_proto != nil {
 		return
 	}
-	file_internal_api_user_proto_init()
-	file_internal_api_message_proto_init()
+	file_api_user_proto_init()
+	file_api_message_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_api_zing_proto_rawDesc), len(file_internal_api_zing_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_zing_proto_rawDesc), len(file_api_zing_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_internal_api_zing_proto_goTypes,
-		DependencyIndexes: file_internal_api_zing_proto_depIdxs,
-		MessageInfos:      file_internal_api_zing_proto_msgTypes,
+		GoTypes:           file_api_zing_proto_goTypes,
+		DependencyIndexes: file_api_zing_proto_depIdxs,
+		MessageInfos:      file_api_zing_proto_msgTypes,
 	}.Build()
-	File_internal_api_zing_proto = out.File
-	file_internal_api_zing_proto_goTypes = nil
-	file_internal_api_zing_proto_depIdxs = nil
+	File_api_zing_proto = out.File
+	file_api_zing_proto_goTypes = nil
+	file_api_zing_proto_depIdxs = nil
 }
