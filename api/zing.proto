@@ -17,6 +17,7 @@ service Zing {
   // Takes a user's id and streams back the messages currently in the server queue
   rpc GetMessages(GetMessagesRequest) returns (stream GetMessagesResponse);
 
+  // Send a message to a user
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
 }
 
@@ -25,27 +26,26 @@ message LoginRequest {
   string password = 2;
 }
 message LoginResponse {
-  string id = 1;
-  string token = 2;
+  string token = 1;
 }
 
 message LogoutRequest {
-  string id = 1;
+  string token = 1;
 }
 message LogoutResponse {}
 
 // GetMessageRequest sends the server the user's id and a token
 message GetMessagesRequest {
-  string id = 1;
-  string token = 2;
+  string token = 1;
 }
 message GetMessagesResponse {
-  User sender = 1;
-  Message content = 2;
+  MessageMetadata metadata = 1;
+  Message message = 2;
 }
 
 message SendMessageRequest {
-  User to = 1;
-  Message message = 2;
+  string token = 1;
+  User to = 2;
+  Message message = 3;
 }
 message SendMessageResponse {}

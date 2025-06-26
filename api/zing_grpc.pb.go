@@ -35,6 +35,7 @@ type ZingClient interface {
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
 	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetMessagesResponse], error)
+	// Send a message to a user
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
 
@@ -105,6 +106,7 @@ type ZingServer interface {
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
 	GetMessages(*GetMessagesRequest, grpc.ServerStreamingServer[GetMessagesResponse]) error
+	// Send a message to a user
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	mustEmbedUnimplementedZingServer()
 }

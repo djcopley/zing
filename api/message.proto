@@ -5,9 +5,15 @@ package api;
 option go_package = "github.com/djcopley/zing/api";
 
 import "google/protobuf/timestamp.proto";
+import "api/user.proto";
 
 message Message {
+  string content = 1;
+}
+
+message MessageMetadata {
   string id = 1;
-  google.protobuf.Timestamp time = 2;
-  string content = 3;
+  User to = 2;
+  User from = 3;
+  google.protobuf.Timestamp timestamp = 4;
 }

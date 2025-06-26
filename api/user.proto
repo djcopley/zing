@@ -5,6 +5,5 @@ package api;
 option go_package = "github.com/djcopley/zing/api";
 
 message User {
-  string id = 1;
-  string name = 2;
+  string username = 1;
 }

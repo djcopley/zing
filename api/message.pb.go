@@ -24,9 +24,7 @@ const (
 
 type Message struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Time          *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=time,proto3" json:"time,omitempty"`
-	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,20 +59,6 @@ func (*Message) Descriptor() ([]byte, []int) {
 	return file_api_message_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *Message) GetTime() *timestamppb.Timestamp {
-	if x != nil {
-		return x.Time
-	}
-	return nil
-}
-
 func (x *Message) GetContent() string {
 	if x != nil {
 		return x.Content
@@ -82,15 +66,86 @@ func (x *Message) GetContent() string {
 	return ""
 }
 
+type MessageMetadata struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	To            *User                  `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
+	From          *User                  `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageMetadata) Reset() {
+	*x = MessageMetadata{}
+	mi := &file_api_message_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageMetadata) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageMetadata) ProtoMessage() {}
+
+func (x *MessageMetadata) ProtoReflect() protoreflect.Message {
+	mi := &file_api_message_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageMetadata.ProtoReflect.Descriptor instead.
+func (*MessageMetadata) Descriptor() ([]byte, []int) {
+	return file_api_message_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *MessageMetadata) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *MessageMetadata) GetTo() *User {
+	if x != nil {
+		return x.To
+	}
+	return nil
+}
+
+func (x *MessageMetadata) GetFrom() *User {
+	if x != nil {
+		return x.From
+	}
+	return nil
+}
+
+func (x *MessageMetadata) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
 var File_api_message_proto protoreflect.FileDescriptor
 
 const file_api_message_proto_rawDesc = "" +
 	"\n" +
-	"\x11api/message.proto\x12\x03api\x1a\x1fgoogle/protobuf/timestamp.proto\"c\n" +
-	"\aMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12.\n" +
-	"\x04time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontentB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
+	"\x11api/message.proto\x12\x03api\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0eapi/user.proto\"#\n" +
+	"\aMessage\x12\x18\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\"\x95\x01\n" +
+	"\x0fMessageMetadata\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
+	"\x02to\x18\x02 \x01(\v2\t.api.UserR\x02to\x12\x1d\n" +
+	"\x04from\x18\x03 \x01(\v2\t.api.UserR\x04from\x128\n" +
+	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestampB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
 	file_api_message_proto_rawDescOnce sync.Once
@@ -104,18 +159,22 @@ func file_api_message_proto_rawDescGZIP() []byte {
 	return file_api_message_proto_rawDescData
 }
 
-var file_api_message_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_api_message_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_api_message_proto_goTypes = []any{
 	(*Message)(nil),               // 0: api.Message
-	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
+	(*MessageMetadata)(nil),       // 1: api.MessageMetadata
+	(*User)(nil),                  // 2: api.User
+	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_api_message_proto_depIdxs = []int32{
-	1, // 0: api.Message.time:type_name -> google.protobuf.Timestamp
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 0: api.MessageMetadata.to:type_name -> api.User
+	2, // 1: api.MessageMetadata.from:type_name -> api.User
+	3, // 2: api.MessageMetadata.timestamp:type_name -> google.protobuf.Timestamp
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_api_message_proto_init() }
@@ -123,13 +182,14 @@ func file_api_message_proto_init() {
 	if File_api_message_proto != nil {
 		return
 	}
+	file_api_user_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_message_proto_rawDesc), len(file_api_message_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

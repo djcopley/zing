@@ -23,8 +23,7 @@ const (
 
 type User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -59,16 +58,9 @@ func (*User) Descriptor() ([]byte, []int) {
 	return file_api_user_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *User) GetId() string {
+func (x *User) GetUsername() string {
 	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
+		return x.Username
 	}
 	return ""
 }
@@ -77,10 +69,9 @@ var File_api_user_proto protoreflect.FileDescriptor
 
 const file_api_user_proto_rawDesc = "" +
 	"\n" +
-	"\x0eapi/user.proto\x12\x03api\"*\n" +
-	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04nameB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
+	"\x0eapi/user.proto\x12\x03api\"\"\n" +
+	"\x04User\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busernameB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
 	file_api_user_proto_rawDescOnce sync.Once
