@@ -2,28 +2,30 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/djcopley/zing/api"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"io"
 	"log"
 )
 
 var (
-	t2 string
+	username string
+	password string
 )
 
 func init() {
-	rootCmd.AddCommand(connectCommand)
-	connectCommand.Flags().StringVarP(&t2, "token", "T", "", "token")
+	rootCmd.AddCommand(loginCommand)
+	loginCommand.Flags().StringVarP(&username, "username", "u", "", "username")
+	loginCommand.Flags().StringVarP(&password, "password", "p", "", "password")
+	loginCommand.MarkFlagRequired("username")
+	loginCommand.MarkFlagRequired("password")
 }
 
-var connectCommand = &cobra.Command{
-	Use:   "connect",
-	Short: "Connect to the server",
+var loginCommand = &cobra.Command{
+	Use:   "login",
+	Short: "Login to the server",
 	Run: func(cmd *cobra.Command, args []string) {
 		addr := fmt.Sprintf("%s:%d", host, port)
 		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -35,24 +37,10 @@ var connectCommand = &cobra.Command{
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		request := &api.GetMessagesRequest{
-			Token: t2,
-		}
-		r, err := c.GetMessages(ctx, request)
+		token, err := c.Login(ctx, &api.LoginRequest{Username: username, Password: password})
 		if err != nil {
-			log.Fatalf("failed to connect to server: %s\n", err)
+			log.Fatalf("failed to login to server: %s\n", err)
 		}
-		for {
-			res, err := r.Recv()
-
-			if err != nil {
-				if errors.Is(err, io.EOF) {
-					break
-				}
-				log.Fatalf("failed to receive message from server: %s\n", err)
-			}
-
-			log.Println(res)
-		}
+		log.Println("token: ", token)
 	},
 }

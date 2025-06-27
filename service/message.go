@@ -1,17 +1,23 @@
 package service
 
 import (
-	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/repository"
 	"log"
 )
+
+func NewMessageService(messageRepo repository.MessageRepositoryInterface) *MessageService {
+	return &MessageService{
+		messageRepo: messageRepo,
+	}
+}
 
 type MessageService struct {
 	messageRepo repository.MessageRepositoryInterface
 }
 
-func (m *MessageService) GetMessages(username string) <-chan *api.Message {
-	ch := make(chan *api.Message)
+func (m *MessageService) GetMessages(username string) <-chan *model.Message {
+	ch := make(chan *model.Message)
 	go func() {
 		defer close(ch)
 		messages, err := m.messageRepo.Read(username)
@@ -23,4 +29,8 @@ func (m *MessageService) GetMessages(username string) <-chan *api.Message {
 		}
 	}()
 	return ch
+}
+
+func (m *MessageService) CreateMessage(message *model.Message) error {
+	return m.messageRepo.Create(message)
 }

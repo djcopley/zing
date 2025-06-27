@@ -14,7 +14,7 @@ var (
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "localhost", "host")
-	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 5129, "port")
+	rootCmd.PersistentFlags().IntVarP(&port, "port", "P", 5129, "port")
 }
 
 var rootCmd = &cobra.Command{

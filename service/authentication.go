@@ -1,10 +1,19 @@
 package service
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/repository"
 )
+
+func NewAuthenticationService(userRepo repository.UserRepositoryInterface, sessionRepo repository.SessionRepositoryInterface) *AuthenticationService {
+	return &AuthenticationService{
+		userRepo:    userRepo,
+		sessionRepo: sessionRepo,
+	}
+}
 
 type AuthenticationService struct {
 	userRepo    repository.UserRepositoryInterface
@@ -19,7 +28,10 @@ func (as *AuthenticationService) Login(username string, password string) (string
 	if password != user.Password {
 		return "", fmt.Errorf("invalid username or password")
 	}
-	token := generateSessionToken(user)
+	token, err := generateSessionToken()
+	if err != nil {
+		return "", err
+	}
 	err = as.sessionRepo.Create(token, user)
 	if err != nil {
 		return "", err
@@ -43,6 +55,11 @@ func (as *AuthenticationService) ValidateToken(token string) (*model.User, error
 	return user, nil
 }
 
-func generateSessionToken(user *model.User) string {
-	return fmt.Sprintf("%s-%s", user.Username, user.Password)
+func generateSessionToken() (string, error) {
+	bytes := make([]byte, 32)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
 }

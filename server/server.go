@@ -2,13 +2,22 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/service"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
+	"time"
 )
 
 var _ api.ZingServer = &Server{}
+
+func NewServer(authService *service.AuthenticationService, messageService *service.MessageService) *Server {
+	return &Server{
+		authService:    authService,
+		messageService: messageService,
+	}
+}
 
 type Server struct {
 	authService    *service.AuthenticationService
@@ -21,7 +30,7 @@ func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.Log
 	password := request.Password
 	token, err := s.authService.Login(username, password)
 	if err != nil {
-		return &api.LoginResponse{}, fmt.Errorf("incorrect username or password")
+		return &api.LoginResponse{}, err
 	}
 	return &api.LoginResponse{Token: token}, nil
 }
@@ -30,15 +39,39 @@ func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.L
 	token := request.GetToken()
 	err := s.authService.Logout(token)
 	if err != nil {
-		return &api.LogoutResponse{}, fmt.Errorf("something went wrong")
+		return &api.LogoutResponse{}, err
 	}
 	return &api.LogoutResponse{}, nil
 }
 
 func (s *Server) SendMessage(ctx context.Context, request *api.SendMessageRequest) (*api.SendMessageResponse, error) {
+	token := request.GetToken()
+	user, err := s.authService.ValidateToken(token)
+	if err != nil {
+		return nil, err
+	}
 	message := request.GetMessage()
 	to := request.GetTo()
-	return nil, nil
+
+	msg := &model.Message{
+		Content: message.Content,
+		Metadata: model.MessageMetadata{
+			Id: uuid.New(),
+			To: model.User{
+				Username: to.Username,
+			},
+			From: model.User{
+				Username: user.Username,
+			},
+			Timestamp: time.Now(),
+		},
+	}
+
+	if err = s.messageService.CreateMessage(msg); err != nil {
+		return &api.SendMessageResponse{}, err
+	}
+
+	return &api.SendMessageResponse{}, nil
 }
 
 func (s *Server) GetMessages(request *api.GetMessagesRequest, g grpc.ServerStreamingServer[api.GetMessagesResponse]) error {
@@ -48,18 +81,12 @@ func (s *Server) GetMessages(request *api.GetMessagesRequest, g grpc.ServerStrea
 		return err
 	}
 	messageChan := s.messageService.GetMessages(user.Username)
-	for _ = range messageChan {
-		msg := &api.GetMessagesResponse{
-			Metadata: &api.MessageMetadata{
-				Id:        "",
-				To:        nil,
-				From:      nil,
-				Timestamp: nil,
-			},
-			Message: nil,
+	for message := range messageChan {
+		resp := &api.GetMessagesResponse{
+			Metadata: message.Metadata.ToProto(),
+			Message:  message.ToProto(),
 		}
-		err = g.Send(msg)
-		if err != nil {
+		if err = g.Send(resp); err != nil {
 			return err
 		}
 	}

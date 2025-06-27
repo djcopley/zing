@@ -16,6 +16,21 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 	}
 }
 
+func NewTestInMemoryUserRepository() *InMemoryUserRepository {
+	imur := &InMemoryUserRepository{
+		users: make(map[string]*model.User),
+	}
+	imur.users["user1"] = &model.User{
+		Username: "user1",
+		Password: "pass",
+	}
+	imur.users["user2"] = &model.User{
+		Username: "user2",
+		Password: "pass",
+	}
+	return imur
+}
+
 var _ UserRepositoryInterface = &InMemoryUserRepository{}
 
 type InMemoryUserRepository struct {
