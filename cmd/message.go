@@ -16,13 +16,6 @@ var (
 	message string
 )
 
-func init() {
-	rootCmd.AddCommand(messageCommand)
-	messageCommand.Flags().StringVarP(&to, "to", "t", "", "User to send the message to")
-	messageCommand.Flags().StringVarP(&token, "token", "T", "", "Credentials for user")
-	messageCommand.Flags().StringVarP(&message, "message", "m", "", "Message to send")
-}
-
 var messageCommand = &cobra.Command{
 	Use:   "message",
 	Short: "Message a user",
@@ -47,4 +40,11 @@ var messageCommand = &cobra.Command{
 			log.Fatalf("failed to send message: %s\n", err)
 		}
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(messageCommand)
+	messageCommand.Flags().StringVarP(&to, "to", "t", "", "User to send the message to")
+	messageCommand.Flags().StringVarP(&token, "token", "T", "", "Credentials for user")
+	messageCommand.Flags().StringVarP(&message, "message", "m", "", "Message to send")
 }

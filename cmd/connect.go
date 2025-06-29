@@ -16,11 +16,6 @@ var (
 	t2 string
 )
 
-func init() {
-	rootCmd.AddCommand(connectCommand)
-	connectCommand.Flags().StringVarP(&t2, "token", "T", "", "token")
-}
-
 var connectCommand = &cobra.Command{
 	Use:   "connect",
 	Short: "Connect to the server",
@@ -55,4 +50,9 @@ var connectCommand = &cobra.Command{
 			log.Println(res)
 		}
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(connectCommand)
+	connectCommand.Flags().StringVarP(&t2, "token", "T", "", "token")
 }

@@ -12,10 +12,6 @@ import (
 	"net"
 )
 
-func init() {
-	rootCmd.AddCommand(serveCommand)
-}
-
 var serveCommand = &cobra.Command{
 	Use:   "serve",
 	Short: "Serve the zing server",
@@ -43,4 +39,8 @@ var serveCommand = &cobra.Command{
 			log.Fatalf("failed to serve: %v", err)
 		}
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(serveCommand)
 }

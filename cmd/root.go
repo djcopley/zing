@@ -12,14 +12,14 @@ var (
 	port int
 )
 
-func init() {
-	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "localhost", "host")
-	rootCmd.PersistentFlags().IntVarP(&port, "port", "P", 5129, "port")
-}
-
 var rootCmd = &cobra.Command{
 	Use:   "zing",
 	Short: "Zing is a command line messenger",
+}
+
+func init() {
+	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "localhost", "host")
+	rootCmd.PersistentFlags().IntVarP(&port, "port", "P", 5129, "port")
 }
 
 func Execute(conf *config.Config) {

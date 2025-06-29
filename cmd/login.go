@@ -15,14 +15,6 @@ var (
 	password string
 )
 
-func init() {
-	rootCmd.AddCommand(loginCommand)
-	loginCommand.Flags().StringVarP(&username, "username", "u", "", "username")
-	loginCommand.Flags().StringVarP(&password, "password", "p", "", "password")
-	loginCommand.MarkFlagRequired("username")
-	loginCommand.MarkFlagRequired("password")
-}
-
 var loginCommand = &cobra.Command{
 	Use:   "login",
 	Short: "Login to the server",
@@ -43,4 +35,12 @@ var loginCommand = &cobra.Command{
 		}
 		log.Println("token: ", token)
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(loginCommand)
+	loginCommand.Flags().StringVarP(&username, "username", "u", "", "username")
+	loginCommand.Flags().StringVarP(&password, "password", "p", "", "password")
+	loginCommand.MarkFlagRequired("username")
+	loginCommand.MarkFlagRequired("password")
 }
