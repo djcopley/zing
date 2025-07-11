@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	t2 string
+	connectToken string
 )
 
 var connectCommand = &cobra.Command{
@@ -31,7 +31,7 @@ var connectCommand = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		request := &api.GetMessagesRequest{
-			Token: t2,
+			Token: connectToken,
 		}
 		r, err := c.GetMessages(ctx, request)
 		if err != nil {
@@ -54,5 +54,5 @@ var connectCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(connectCommand)
-	connectCommand.Flags().StringVarP(&t2, "token", "T", "", "token")
+	connectCommand.Flags().StringVarP(&connectToken, "token", "T", "", "token")
 }
