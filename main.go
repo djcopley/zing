@@ -6,6 +6,9 @@ import (
 )
 
 func main() {
-	conf := &config.Config{}
+	conf := &config.Config{
+		ServerAddr: config.GetServerAddr(),
+		Token:      config.GetToken(),
+	}
 	cmd.Execute(conf)
 }

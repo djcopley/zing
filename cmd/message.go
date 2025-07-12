@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/config"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,7 +12,6 @@ import (
 
 var (
 	to      string
-	token   string
 	message string
 )
 
@@ -20,7 +19,12 @@ var messageCommand = &cobra.Command{
 	Use:   "message",
 	Short: "Message a user",
 	Run: func(cmd *cobra.Command, args []string) {
-		addr := fmt.Sprintf("%s:%d", host, port)
+		token := config.GetToken()
+		if token == "" {
+			log.Fatalf("No authentication token found. Please login first.")
+		}
+
+		addr := config.GetServerAddr()
 		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			log.Fatalf("failed to connect to server: %s\n", err)

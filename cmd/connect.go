@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/config"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,15 +12,18 @@ import (
 	"log"
 )
 
-var (
-	connectToken string
-)
-
 var connectCommand = &cobra.Command{
 	Use:   "connect",
 	Short: "Connect to the server",
 	Run: func(cmd *cobra.Command, args []string) {
-		addr := fmt.Sprintf("%s:%d", host, port)
+		// Check for token flag override
+		token := config.GetToken()
+		if token == "" {
+			log.Fatalf("No authentication token found. Please login first.")
+		}
+
+		// Get server address from config
+		addr := config.GetServerAddr()
 		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			log.Fatalf("failed to connect to server: %s\n", err)
@@ -31,7 +34,7 @@ var connectCommand = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		request := &api.GetMessagesRequest{
-			Token: connectToken,
+			Token: token,
 		}
 		r, err := c.GetMessages(ctx, request)
 		if err != nil {
@@ -54,5 +57,4 @@ var connectCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(connectCommand)
-	connectCommand.Flags().StringVarP(&connectToken, "token", "T", "", "token")
 }
