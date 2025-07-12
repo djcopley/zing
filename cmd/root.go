@@ -20,6 +20,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&host, "host", "H", "localhost", "host")
 	rootCmd.PersistentFlags().IntVarP(&port, "port", "P", 5129, "port")
+	messageCommand.Flags().StringVarP(&token, "token", "T", "", "Credentials for user")
 }
 
 func Execute(conf *config.Config) {

@@ -10,15 +10,17 @@ import (
 	"log"
 )
 
-var (
-	username string
-	password string
-)
-
 var loginCommand = &cobra.Command{
-	Use:   "login",
+	Use:   "login [username] [password]",
 	Short: "Login to the server",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 2 {
+			log.Fatal("username and password required")
+		}
+		username := args[0]
+		password := args[1]
+
 		addr := fmt.Sprintf("%s:%d", host, port)
 		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
@@ -39,8 +41,4 @@ var loginCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(loginCommand)
-	loginCommand.Flags().StringVarP(&username, "username", "u", "", "username")
-	loginCommand.Flags().StringVarP(&password, "password", "p", "", "password")
-	loginCommand.MarkFlagRequired("username")
-	loginCommand.MarkFlagRequired("password")
 }
