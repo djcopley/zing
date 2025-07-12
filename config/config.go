@@ -1,8 +1,9 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 	"github.com/spf13/viper"
+	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 
 type Config struct {
 	ServerAddr string
+	ServerPort int
 	Token      string
 }
 
@@ -25,12 +27,14 @@ func InitConfig() {
 	}
 	viper.AddConfigPath(".")
 
-	viper.SetDefault("server_addr", "localhost:5132")
+	viper.SetDefault("server_addr", "")
+	viper.SetDefault("server_port", 5132)
 	viper.SetDefault("token", "")
 
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			fmt.Fprintf(os.Stderr, "Error reading config file: %s\n", err)
+		var configFileNotFoundError *viper.ConfigFileNotFoundError
+		if !errors.As(err, configFileNotFoundError) {
+			log.Printf("Error reading config file: %s\n", err)
 		}
 	}
 }
@@ -111,7 +115,7 @@ func EnsureConfigFile() error {
 		return err
 	}
 
-	configFile := filepath.Join(configDir, "config.yaml")
+	configFile := filepath.Join(configDir, "config.toml")
 	if _, err := os.Stat(configFile); os.IsNotExist(err) {
 		f, err := os.Create(configFile)
 		if err != nil {

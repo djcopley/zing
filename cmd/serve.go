@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/djcopley/zing/api"
-	"github.com/djcopley/zing/config"
 	"github.com/djcopley/zing/repository"
 	"github.com/djcopley/zing/server"
 	"github.com/djcopley/zing/service"
@@ -12,16 +12,16 @@ import (
 	"net"
 )
 
-const (
-	defaultServerAddr = "localhost"
-	defaultServerPort = 5132
+var (
+	serverAddr = "localhost"
+	serverPort = 5132
 )
 
 var serveCommand = &cobra.Command{
 	Use:   "serve",
 	Short: "Serve the zing server",
 	Run: func(cmd *cobra.Command, args []string) {
-		addr := config.GetServerAddr()
+		addr := fmt.Sprintf("%s:%d", serverAddr, serverPort)
 		log.Printf("starting zing server @ %s\n", addr)
 
 		lis, err := net.Listen("tcp", addr)
@@ -48,4 +48,6 @@ var serveCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(serveCommand)
+	serveCommand.Flags().StringVarP(&serverAddr, "addr", "a", serverAddr, "Server address to bind to")
+	serveCommand.Flags().IntVarP(&serverPort, "port", "p", serverPort, "Server port to bind to")
 }
