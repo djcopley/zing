@@ -69,7 +69,7 @@ var File_api_user_proto protoreflect.FileDescriptor
 
 const file_api_user_proto_rawDesc = "" +
 	"\n" +
-	"\x0eapi/user.proto\x12\x03api\"\"\n" +
+	"\x0eapi/user.proto\x12\x04zing\"\"\n" +
 	"\x04User\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busernameB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
@@ -87,7 +87,7 @@ func file_api_user_proto_rawDescGZIP() []byte {
 
 var file_api_user_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_api_user_proto_goTypes = []any{
-	(*User)(nil), // 0: api.User
+	(*User)(nil), // 0: zing.User
 }
 var file_api_user_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

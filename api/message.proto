@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package api;
+package zing;
 
 option go_package = "github.com/djcopley/zing/api";
 

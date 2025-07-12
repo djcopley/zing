@@ -138,13 +138,15 @@ var File_api_message_proto protoreflect.FileDescriptor
 
 const file_api_message_proto_rawDesc = "" +
 	"\n" +
-	"\x11api/message.proto\x12\x03api\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0eapi/user.proto\"#\n" +
+	"\x11api/message.proto\x12\x04zing\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0eapi/user.proto\"#\n" +
 	"\aMessage\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"\x95\x01\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\"\x97\x01\n" +
 	"\x0fMessageMetadata\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
-	"\x02to\x18\x02 \x01(\v2\t.api.UserR\x02to\x12\x1d\n" +
-	"\x04from\x18\x03 \x01(\v2\t.api.UserR\x04from\x128\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\x02to\x18\x02 \x01(\v2\n" +
+	".zing.UserR\x02to\x12\x1e\n" +
+	"\x04from\x18\x03 \x01(\v2\n" +
+	".zing.UserR\x04from\x128\n" +
 	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestampB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
@@ -161,15 +163,15 @@ func file_api_message_proto_rawDescGZIP() []byte {
 
 var file_api_message_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_api_message_proto_goTypes = []any{
-	(*Message)(nil),               // 0: api.Message
-	(*MessageMetadata)(nil),       // 1: api.MessageMetadata
-	(*User)(nil),                  // 2: api.User
+	(*Message)(nil),               // 0: zing.Message
+	(*MessageMetadata)(nil),       // 1: zing.MessageMetadata
+	(*User)(nil),                  // 2: zing.User
 	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_api_message_proto_depIdxs = []int32{
-	2, // 0: api.MessageMetadata.to:type_name -> api.User
-	2, // 1: api.MessageMetadata.from:type_name -> api.User
-	3, // 2: api.MessageMetadata.timestamp:type_name -> google.protobuf.Timestamp
+	2, // 0: zing.MessageMetadata.to:type_name -> zing.User
+	2, // 1: zing.MessageMetadata.from:type_name -> zing.User
+	3, // 2: zing.MessageMetadata.timestamp:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

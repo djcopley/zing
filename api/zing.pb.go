@@ -394,7 +394,7 @@ var File_api_zing_proto protoreflect.FileDescriptor
 
 const file_api_zing_proto_rawDesc = "" +
 	"\n" +
-	"\x0eapi/zing.proto\x12\x03api\x1a\x0eapi/user.proto\x1a\x11api/message.proto\"F\n" +
+	"\x0eapi/zing.proto\x12\x04zing\x1a\x0eapi/user.proto\x1a\x11api/message.proto\"F\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"%\n" +
@@ -404,20 +404,21 @@ const file_api_zing_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"\x10\n" +
 	"\x0eLogoutResponse\"*\n" +
 	"\x12GetMessagesRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"o\n" +
-	"\x13GetMessagesResponse\x120\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x14.api.MessageMetadataR\bmetadata\x12&\n" +
-	"\amessage\x18\x02 \x01(\v2\f.api.MessageR\amessage\"m\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"q\n" +
+	"\x13GetMessagesResponse\x121\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x15.zing.MessageMetadataR\bmetadata\x12'\n" +
+	"\amessage\x18\x02 \x01(\v2\r.zing.MessageR\amessage\"o\n" +
 	"\x12SendMessageRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\x12\x19\n" +
-	"\x02to\x18\x02 \x01(\v2\t.api.UserR\x02to\x12&\n" +
-	"\amessage\x18\x03 \x01(\v2\f.api.MessageR\amessage\"\x15\n" +
-	"\x13SendMessageResponse2\xef\x01\n" +
-	"\x04Zing\x12.\n" +
-	"\x05Login\x12\x11.api.LoginRequest\x1a\x12.api.LoginResponse\x121\n" +
-	"\x06Logout\x12\x12.api.LogoutRequest\x1a\x13.api.LogoutResponse\x12B\n" +
-	"\vGetMessages\x12\x17.api.GetMessagesRequest\x1a\x18.api.GetMessagesResponse0\x01\x12@\n" +
-	"\vSendMessage\x12\x17.api.SendMessageRequest\x1a\x18.api.SendMessageResponseB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
+	"\x05token\x18\x01 \x01(\tR\x05token\x12\x1a\n" +
+	"\x02to\x18\x02 \x01(\v2\n" +
+	".zing.UserR\x02to\x12'\n" +
+	"\amessage\x18\x03 \x01(\v2\r.zing.MessageR\amessage\"\x15\n" +
+	"\x13SendMessageResponse2\xf7\x01\n" +
+	"\x04Zing\x120\n" +
+	"\x05Login\x12\x12.zing.LoginRequest\x1a\x13.zing.LoginResponse\x123\n" +
+	"\x06Logout\x12\x13.zing.LogoutRequest\x1a\x14.zing.LogoutResponse\x12D\n" +
+	"\vGetMessages\x12\x18.zing.GetMessagesRequest\x1a\x19.zing.GetMessagesResponse0\x01\x12B\n" +
+	"\vSendMessage\x12\x18.zing.SendMessageRequest\x1a\x19.zing.SendMessageResponseB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
 	file_api_zing_proto_rawDescOnce sync.Once
@@ -433,31 +434,31 @@ func file_api_zing_proto_rawDescGZIP() []byte {
 
 var file_api_zing_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_api_zing_proto_goTypes = []any{
-	(*LoginRequest)(nil),        // 0: api.LoginRequest
-	(*LoginResponse)(nil),       // 1: api.LoginResponse
-	(*LogoutRequest)(nil),       // 2: api.LogoutRequest
-	(*LogoutResponse)(nil),      // 3: api.LogoutResponse
-	(*GetMessagesRequest)(nil),  // 4: api.GetMessagesRequest
-	(*GetMessagesResponse)(nil), // 5: api.GetMessagesResponse
-	(*SendMessageRequest)(nil),  // 6: api.SendMessageRequest
-	(*SendMessageResponse)(nil), // 7: api.SendMessageResponse
-	(*MessageMetadata)(nil),     // 8: api.MessageMetadata
-	(*Message)(nil),             // 9: api.Message
-	(*User)(nil),                // 10: api.User
+	(*LoginRequest)(nil),        // 0: zing.LoginRequest
+	(*LoginResponse)(nil),       // 1: zing.LoginResponse
+	(*LogoutRequest)(nil),       // 2: zing.LogoutRequest
+	(*LogoutResponse)(nil),      // 3: zing.LogoutResponse
+	(*GetMessagesRequest)(nil),  // 4: zing.GetMessagesRequest
+	(*GetMessagesResponse)(nil), // 5: zing.GetMessagesResponse
+	(*SendMessageRequest)(nil),  // 6: zing.SendMessageRequest
+	(*SendMessageResponse)(nil), // 7: zing.SendMessageResponse
+	(*MessageMetadata)(nil),     // 8: zing.MessageMetadata
+	(*Message)(nil),             // 9: zing.Message
+	(*User)(nil),                // 10: zing.User
 }
 var file_api_zing_proto_depIdxs = []int32{
-	8,  // 0: api.GetMessagesResponse.metadata:type_name -> api.MessageMetadata
-	9,  // 1: api.GetMessagesResponse.message:type_name -> api.Message
-	10, // 2: api.SendMessageRequest.to:type_name -> api.User
-	9,  // 3: api.SendMessageRequest.message:type_name -> api.Message
-	0,  // 4: api.Zing.Login:input_type -> api.LoginRequest
-	2,  // 5: api.Zing.Logout:input_type -> api.LogoutRequest
-	4,  // 6: api.Zing.GetMessages:input_type -> api.GetMessagesRequest
-	6,  // 7: api.Zing.SendMessage:input_type -> api.SendMessageRequest
-	1,  // 8: api.Zing.Login:output_type -> api.LoginResponse
-	3,  // 9: api.Zing.Logout:output_type -> api.LogoutResponse
-	5,  // 10: api.Zing.GetMessages:output_type -> api.GetMessagesResponse
-	7,  // 11: api.Zing.SendMessage:output_type -> api.SendMessageResponse
+	8,  // 0: zing.GetMessagesResponse.metadata:type_name -> zing.MessageMetadata
+	9,  // 1: zing.GetMessagesResponse.message:type_name -> zing.Message
+	10, // 2: zing.SendMessageRequest.to:type_name -> zing.User
+	9,  // 3: zing.SendMessageRequest.message:type_name -> zing.Message
+	0,  // 4: zing.Zing.Login:input_type -> zing.LoginRequest
+	2,  // 5: zing.Zing.Logout:input_type -> zing.LogoutRequest
+	4,  // 6: zing.Zing.GetMessages:input_type -> zing.GetMessagesRequest
+	6,  // 7: zing.Zing.SendMessage:input_type -> zing.SendMessageRequest
+	1,  // 8: zing.Zing.Login:output_type -> zing.LoginResponse
+	3,  // 9: zing.Zing.Logout:output_type -> zing.LogoutResponse
+	5,  // 10: zing.Zing.GetMessages:output_type -> zing.GetMessagesResponse
+	7,  // 11: zing.Zing.SendMessage:output_type -> zing.SendMessageResponse
 	8,  // [8:12] is the sub-list for method output_type
 	4,  // [4:8] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name

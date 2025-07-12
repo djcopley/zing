@@ -8,6 +8,7 @@ import (
 	"github.com/djcopley/zing/service"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 )
@@ -37,6 +38,8 @@ var serveCommand = &cobra.Command{
 		messageService := service.NewMessageService(messageRepo)
 
 		s := grpc.NewServer()
+		reflection.Register(s)
+
 		server := server.NewServer(authService, messageService)
 		api.RegisterZingServer(s, server)
 

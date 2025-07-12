@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Zing_Login_FullMethodName       = "/api.Zing/Login"
-	Zing_Logout_FullMethodName      = "/api.Zing/Logout"
-	Zing_GetMessages_FullMethodName = "/api.Zing/GetMessages"
-	Zing_SendMessage_FullMethodName = "/api.Zing/SendMessage"
+	Zing_Login_FullMethodName       = "/zing.Zing/Login"
+	Zing_Logout_FullMethodName      = "/zing.Zing/Logout"
+	Zing_GetMessages_FullMethodName = "/zing.Zing/GetMessages"
+	Zing_SendMessage_FullMethodName = "/zing.Zing/SendMessage"
 )
 
 // ZingClient is the client API for Zing service.
@@ -220,7 +220,7 @@ func _Zing_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Zing_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.Zing",
+	ServiceName: "zing.Zing",
 	HandlerType: (*ZingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
