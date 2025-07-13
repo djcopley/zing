@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"github.com/spf13/viper"
 	"log"
 	"os"
@@ -9,6 +10,13 @@ import (
 	"strconv"
 	"strings"
 )
+
+// Config behavior:
+// 1. Config located at $HOME/.config/zing/config.toml
+
+// Fork in the road: one config table? or different client/server config tables?
+// Start with one config table until there is a strong need for multiple - if maintaining canonical server port number
+// with dual sources of truth becomes cumbersome, we can pull that configuration into this file.
 
 type Config struct {
 	ServerAddr string
@@ -41,7 +49,9 @@ func InitConfig() {
 
 // GetServerAddr returns the configured server address in the form of host:port
 func GetServerAddr() string {
-	return viper.GetString("server_addr")
+	addr := viper.GetString("server_addr")
+	port := viper.GetInt("server_port")
+	return fmt.Sprintf("%s:%d", addr, port)
 }
 
 // SetServerAddr stores the server address

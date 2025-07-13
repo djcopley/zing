@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/djcopley/zing/api"
 	"github.com/djcopley/zing/config"
+	"github.com/djcopley/zing/editor"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -11,8 +12,7 @@ import (
 )
 
 var (
-	to      string
-	message string
+	to string
 )
 
 var messageCommand = &cobra.Command{
@@ -35,6 +35,11 @@ var messageCommand = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
+		message, err := editor.ComposeMessage()
+		if err != nil {
+			log.Fatalf("failed to compose message: %s\n", err)
+		}
+
 		_, err = c.SendMessage(ctx, &api.SendMessageRequest{
 			Token:   token,
 			To:      &api.User{Username: to},
@@ -49,5 +54,4 @@ var messageCommand = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(messageCommand)
 	messageCommand.Flags().StringVarP(&to, "to", "t", "", "User to send the message to")
-	messageCommand.Flags().StringVarP(&message, "message", "m", "", "Message to send")
 }
