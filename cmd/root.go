@@ -18,7 +18,7 @@ func init() {
 	}
 }
 
-func Execute(conf *config.Config) {
+func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatalln(err)
 	}

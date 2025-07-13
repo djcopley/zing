@@ -3,11 +3,10 @@ package cmd
 import (
 	"context"
 	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/client"
 	"github.com/djcopley/zing/config"
 	"github.com/djcopley/zing/editor"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 )
 
@@ -22,12 +21,11 @@ var messageCommand = &cobra.Command{
 		}
 
 		addr := config.GetServerAddr()
-		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		client, err := client.NewInsecureClient(addr)
 		if err != nil {
-			log.Fatalf("failed to connect to server: %s\n", err)
+			log.Fatalln(err)
 		}
-		defer conn.Close()
-		c := api.NewZingClient(conn)
+		defer client.Close()
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -38,7 +36,7 @@ var messageCommand = &cobra.Command{
 		}
 
 		user := args[0]
-		_, err = c.SendMessage(ctx, &api.SendMessageRequest{
+		_, err = client.SendMessage(ctx, &api.SendMessageRequest{
 			Token:   token,
 			To:      &api.User{Username: user},
 			Message: &api.Message{Content: message},

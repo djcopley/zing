@@ -4,34 +4,52 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"github.com/djcopley/zing/api"
-	"github.com/djcopley/zing/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 )
 
-func NewSecureClient() (api.ZingClient, error) {
-	// Load system root CAs
+type Client struct {
+	conn *grpc.ClientConn
+	api.ZingClient
+}
+
+func (c *Client) Close() error {
+	return c.conn.Close()
+}
+
+func NewInsecureClient(address string) (*Client, error) {
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	client := api.NewZingClient(conn)
+	return &Client{
+		conn:       conn,
+		ZingClient: client,
+	}, nil
+}
+
+func NewSecureClient(address string) (*Client, error) {
 	certPool, err := x509.SystemCertPool()
 	if err != nil {
 		log.Fatalf("Failed to load system root CAs: %v", err)
 	}
 
-	// Create TLS config with system roots
 	tlsConfig := &tls.Config{
 		RootCAs: certPool,
 	}
-
 	creds := credentials.NewTLS(tlsConfig)
 
-	// Get server address from config
-	addr := config.GetServerAddr()
-	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(creds))
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(creds))
 	if err != nil {
-		log.Fatalf("failed to connect to server: %s\n", err)
+		return nil, err
 	}
-	defer conn.Close()
-	c := api.NewZingClient(conn)
+	client := api.NewZingClient(conn)
 
-	return c, nil
+	return &Client{
+		conn:       conn,
+		ZingClient: client,
+	}, nil
 }

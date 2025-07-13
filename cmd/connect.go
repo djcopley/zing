@@ -4,10 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/client"
 	"github.com/djcopley/zing/config"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"io"
 	"log"
 )
@@ -16,27 +15,24 @@ var connectCommand = &cobra.Command{
 	Use:   "connect",
 	Short: "Connect to the server",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Check for token flag override
 		token := config.GetToken()
 		if token == "" {
 			log.Fatalf("No authentication token found. Please login first.")
 		}
 
-		// Get server address from config
 		addr := config.GetServerAddr()
-		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		client, err := client.NewInsecureClient(addr)
 		if err != nil {
-			log.Fatalf("failed to connect to server: %s\n", err)
+			log.Fatalln(err)
 		}
-		defer conn.Close()
-		c := api.NewZingClient(conn)
+		defer client.Close()
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 		request := &api.GetMessagesRequest{
 			Token: token,
 		}
-		r, err := c.GetMessages(ctx, request)
+		r, err := client.GetMessages(ctx, request)
 		if err != nil {
 			log.Fatalf("failed to connect to server: %s\n", err)
 		}
