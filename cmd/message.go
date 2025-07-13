@@ -11,13 +11,10 @@ import (
 	"log"
 )
 
-var (
-	to string
-)
-
 var messageCommand = &cobra.Command{
-	Use:   "message",
+	Use:   "message [user]",
 	Short: "Message a user",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		token := config.GetToken()
 		if token == "" {
@@ -40,9 +37,10 @@ var messageCommand = &cobra.Command{
 			log.Fatalf("failed to compose message: %s\n", err)
 		}
 
+		user := args[0]
 		_, err = c.SendMessage(ctx, &api.SendMessageRequest{
 			Token:   token,
-			To:      &api.User{Username: to},
+			To:      &api.User{Username: user},
 			Message: &api.Message{Content: message},
 		})
 		if err != nil {
@@ -53,5 +51,4 @@ var messageCommand = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(messageCommand)
-	messageCommand.Flags().StringVarP(&to, "to", "t", "", "User to send the message to")
 }
