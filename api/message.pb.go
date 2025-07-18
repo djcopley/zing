@@ -24,7 +24,8 @@ const (
 
 type Message struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Metadata      *MessageMetadata       `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -57,6 +58,13 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
 	return file_api_message_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Message) GetMetadata() *MessageMetadata {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
 }
 
 func (x *Message) GetContent() string {
@@ -138,9 +146,10 @@ var File_api_message_proto protoreflect.FileDescriptor
 
 const file_api_message_proto_rawDesc = "" +
 	"\n" +
-	"\x11api/message.proto\x12\x04zing\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0eapi/user.proto\"#\n" +
-	"\aMessage\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"\x97\x01\n" +
+	"\x11api/message.proto\x12\x04zing\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0eapi/user.proto\"V\n" +
+	"\aMessage\x121\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x15.zing.MessageMetadataR\bmetadata\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\"\x97\x01\n" +
 	"\x0fMessageMetadata\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\x02to\x18\x02 \x01(\v2\n" +
@@ -169,14 +178,15 @@ var file_api_message_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_api_message_proto_depIdxs = []int32{
-	2, // 0: zing.MessageMetadata.to:type_name -> zing.User
-	2, // 1: zing.MessageMetadata.from:type_name -> zing.User
-	3, // 2: zing.MessageMetadata.timestamp:type_name -> google.protobuf.Timestamp
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 0: zing.Message.metadata:type_name -> zing.MessageMetadata
+	2, // 1: zing.MessageMetadata.to:type_name -> zing.User
+	2, // 2: zing.MessageMetadata.from:type_name -> zing.User
+	3, // 3: zing.MessageMetadata.timestamp:type_name -> google.protobuf.Timestamp
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_message_proto_init() }

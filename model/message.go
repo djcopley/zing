@@ -7,17 +7,6 @@ import (
 	"time"
 )
 
-type Message struct {
-	Content  string          `json:"content"`
-	Metadata MessageMetadata `json:"metadata"`
-}
-
-func (m *Message) ToProto() *api.Message {
-	return &api.Message{
-		Content: m.Content,
-	}
-}
-
 type MessageMetadata struct {
 	Id        uuid.UUID `json:"id"`
 	To        User      `json:"to"`
@@ -31,5 +20,17 @@ func (m *MessageMetadata) ToProto() *api.MessageMetadata {
 		To:        &api.User{Username: m.To.Username},
 		From:      &api.User{Username: m.From.Username},
 		Timestamp: timestamppb.New(m.Timestamp),
+	}
+}
+
+type Message struct {
+	Metadata MessageMetadata `json:"metadata"`
+	Content  string          `json:"content"`
+}
+
+func (m *Message) ToProto() *api.Message {
+	return &api.Message{
+		Metadata: m.Metadata.ToProto(),
+		Content:  m.Content,
 	}
 }

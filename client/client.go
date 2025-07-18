@@ -1,12 +1,14 @@
 package client
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"github.com/djcopley/zing/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 	"log"
 )
 
@@ -29,6 +31,11 @@ func NewInsecureClient(address string) (*Client, error) {
 		conn:       conn,
 		ZingClient: client,
 	}, nil
+}
+
+func AddAuthMetadata(ctx context.Context, token string) context.Context {
+	md := metadata.New(map[string]string{"authorization": "Bearer " + token})
+	return metadata.NewOutgoingContext(ctx, md)
 }
 
 func NewSecureClient(address string) (*Client, error) {

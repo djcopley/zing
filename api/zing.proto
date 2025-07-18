@@ -15,7 +15,7 @@ service Zing {
   rpc Logout(LogoutRequest) returns (LogoutResponse);
 
   // Takes a user's id and streams back the messages currently in the server queue
-  rpc GetMessages(GetMessagesRequest) returns (stream GetMessagesResponse);
+  rpc ListMessages(ListMessagesRequest) returns (ListMessagesResponse);
 
   // Send a message to a user
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
@@ -29,23 +29,35 @@ message LoginResponse {
   string token = 1;
 }
 
-message LogoutRequest {
-  string token = 1;
-}
+message LogoutRequest {}
 message LogoutResponse {}
 
 // GetMessageRequest sends the server the user's id and a token
-message GetMessagesRequest {
-  string token = 1;
+message ListMessagesRequest {
+  // The maximum number of messages to return. The service may return fewer than
+  // this value.
+  // If unspecified, at most 50 messages will be returned.
+  // The maximum value is 1000; values above 1000 will be coerced to 1000.
+  int32 page_size = 1;
+
+  // A page token, received from a previous `ListMessages` call.
+  // Provide this to retrieve the subsequent page.
+  //
+  // When paginating, all other parameters provided to `ListMessages` must match
+  // the call that provided the page token.
+  string page_token = 2;
 }
-message GetMessagesResponse {
-  MessageMetadata metadata = 1;
-  Message message = 2;
+message ListMessagesResponse {
+  // The messages for the user.
+  repeated Message messages = 1;
+
+  // A token that can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
 }
 
 message SendMessageRequest {
-  string token = 1;
-  User to = 2;
-  Message message = 3;
+  User to = 1;
+  Message message = 2;
 }
 message SendMessageResponse {}

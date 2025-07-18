@@ -2,14 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/djcopley/zing/api"
 	"github.com/djcopley/zing/repository"
 	"github.com/djcopley/zing/server"
 	"github.com/djcopley/zing/service"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
 	"net"
 )
 
@@ -18,16 +15,19 @@ var (
 	serverPort = 5132
 )
 
-var serveCommand = &cobra.Command{
+var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Serve the zing server",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		addr := fmt.Sprintf("%s:%d", serverAddr, serverPort)
-		log.Printf("starting zing server @ %s\n", addr)
+		_, err := fmt.Fprintf(cmd.OutOrStdout(), "starting zing server @ %s\n", addr)
+		if err != nil {
+			return err
+		}
 
 		lis, err := net.Listen("tcp", addr)
 		if err != nil {
-			log.Fatalf("failed to listen: %v", err)
+			return fmt.Errorf("failed to listen: %v", err)
 		}
 
 		userRepo := repository.NewTestInMemoryUserRepository()
@@ -37,20 +37,19 @@ var serveCommand = &cobra.Command{
 		authService := service.NewAuthenticationService(userRepo, sessionRepo)
 		messageService := service.NewMessageService(messageRepo)
 
-		s := grpc.NewServer()
-		reflection.Register(s)
-
 		server := server.NewServer(authService, messageService)
-		api.RegisterZingServer(s, server)
+		reflection.Register(server)
 
-		if err := s.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+		if err := server.Serve(lis); err != nil {
+			return fmt.Errorf("failed to serve: %v", err)
 		}
+
+		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(serveCommand)
-	serveCommand.Flags().StringVarP(&serverAddr, "addr", "a", serverAddr, "Server address to bind to")
-	serveCommand.Flags().IntVarP(&serverPort, "port", "p", serverPort, "Server port to bind to")
+	rootCmd.AddCommand(serveCmd)
+	serveCmd.Flags().StringVarP(&serverAddr, "addr", "a", serverAddr, "Server address to bind to")
+	serveCmd.Flags().IntVarP(&serverPort, "port", "p", serverPort, "Server port to bind to")
 }

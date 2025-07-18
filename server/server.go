@@ -12,11 +12,16 @@ import (
 
 var _ api.ZingServer = &Server{}
 
-func NewServer(authService *service.AuthenticationService, messageService *service.MessageService) *Server {
-	return &Server{
+func NewServer(authService *service.AuthenticationService, messageService *service.MessageService) *grpc.Server {
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(newAuthInterceptor(authService)),
+	)
+	zingServer := &Server{
 		authService:    authService,
 		messageService: messageService,
 	}
+	api.RegisterZingServer(grpcServer, zingServer)
+	return grpcServer
 }
 
 type Server struct {
@@ -36,7 +41,7 @@ func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.Log
 }
 
 func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.LogoutResponse, error) {
-	token := request.GetToken()
+	token := ctx.Value("token").(string)
 	err := s.authService.Logout(token)
 	if err != nil {
 		return &api.LogoutResponse{}, err
@@ -45,11 +50,7 @@ func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.L
 }
 
 func (s *Server) SendMessage(ctx context.Context, request *api.SendMessageRequest) (*api.SendMessageResponse, error) {
-	token := request.GetToken()
-	user, err := s.authService.ValidateToken(token)
-	if err != nil {
-		return nil, err
-	}
+	user := getUserFromContext(ctx)
 	message := request.GetMessage()
 	to := request.GetTo()
 
@@ -67,28 +68,31 @@ func (s *Server) SendMessage(ctx context.Context, request *api.SendMessageReques
 		},
 	}
 
-	if err = s.messageService.CreateMessage(msg); err != nil {
-		return &api.SendMessageResponse{}, err
+	if err := s.messageService.CreateMessage(msg); err != nil {
+		return nil, err
 	}
 
 	return &api.SendMessageResponse{}, nil
 }
 
-func (s *Server) GetMessages(request *api.GetMessagesRequest, g grpc.ServerStreamingServer[api.GetMessagesResponse]) error {
-	token := request.GetToken()
-	user, err := s.authService.ValidateToken(token)
+func (s *Server) ListMessages(ctx context.Context, request *api.ListMessagesRequest) (*api.ListMessagesResponse, error) {
+	user := getUserFromContext(ctx)
+	messages, err := s.messageService.GetMessages(user.Username)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	messageChan := s.messageService.GetMessages(user.Username)
-	for message := range messageChan {
-		resp := &api.GetMessagesResponse{
-			Metadata: message.Metadata.ToProto(),
-			Message:  message.ToProto(),
-		}
-		if err = g.Send(resp); err != nil {
-			return err
-		}
+	apiMessages := translateMessages(messages)
+	response := &api.ListMessagesResponse{
+		Messages:      apiMessages,
+		NextPageToken: "", // todo
 	}
-	return nil
+	return response, nil
+}
+
+func translateMessages(messages []*model.Message) []*api.Message {
+	var apiMessages []*api.Message
+	for _, message := range messages {
+		apiMessages = append(apiMessages, message.ToProto())
+	}
+	return apiMessages
 }

@@ -1,9 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/repository"
-	"log"
 )
 
 func NewMessageService(messageRepo repository.MessageRepositoryInterface) *MessageService {
@@ -16,19 +16,12 @@ type MessageService struct {
 	messageRepo repository.MessageRepositoryInterface
 }
 
-func (m *MessageService) GetMessages(username string) <-chan *model.Message {
-	ch := make(chan *model.Message)
-	go func() {
-		defer close(ch)
-		messages, err := m.messageRepo.Read(username)
-		if err != nil {
-			log.Printf("unable to read messages for user %s: %v", username, err)
-		}
-		for _, msg := range messages {
-			ch <- msg
-		}
-	}()
-	return ch
+func (m *MessageService) GetMessages(username string) ([]*model.Message, error) {
+	messages, err := m.messageRepo.Read(username)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read messages for user %s: %v", username, err)
+	}
+	return messages, nil
 }
 
 func (m *MessageService) CreateMessage(message *model.Message) error {

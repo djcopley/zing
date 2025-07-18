@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Zing_Login_FullMethodName       = "/zing.Zing/Login"
-	Zing_Logout_FullMethodName      = "/zing.Zing/Logout"
-	Zing_GetMessages_FullMethodName = "/zing.Zing/GetMessages"
-	Zing_SendMessage_FullMethodName = "/zing.Zing/SendMessage"
+	Zing_Login_FullMethodName        = "/zing.Zing/Login"
+	Zing_Logout_FullMethodName       = "/zing.Zing/Logout"
+	Zing_ListMessages_FullMethodName = "/zing.Zing/ListMessages"
+	Zing_SendMessage_FullMethodName  = "/zing.Zing/SendMessage"
 )
 
 // ZingClient is the client API for Zing service.
@@ -34,7 +34,7 @@ type ZingClient interface {
 	// Invalidates the user's tokens
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
-	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetMessagesResponse], error)
+	ListMessages(ctx context.Context, in *ListMessagesRequest, opts ...grpc.CallOption) (*ListMessagesResponse, error)
 	// Send a message to a user
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
@@ -67,24 +67,15 @@ func (c *zingClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *zingClient) GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetMessagesResponse], error) {
+func (c *zingClient) ListMessages(ctx context.Context, in *ListMessagesRequest, opts ...grpc.CallOption) (*ListMessagesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Zing_ServiceDesc.Streams[0], Zing_GetMessages_FullMethodName, cOpts...)
+	out := new(ListMessagesResponse)
+	err := c.cc.Invoke(ctx, Zing_ListMessages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[GetMessagesRequest, GetMessagesResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Zing_GetMessagesClient = grpc.ServerStreamingClient[GetMessagesResponse]
 
 func (c *zingClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -105,7 +96,7 @@ type ZingServer interface {
 	// Invalidates the user's tokens
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// Takes a user's id and streams back the messages currently in the server queue
-	GetMessages(*GetMessagesRequest, grpc.ServerStreamingServer[GetMessagesResponse]) error
+	ListMessages(context.Context, *ListMessagesRequest) (*ListMessagesResponse, error)
 	// Send a message to a user
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	mustEmbedUnimplementedZingServer()
@@ -124,8 +115,8 @@ func (UnimplementedZingServer) Login(context.Context, *LoginRequest) (*LoginResp
 func (UnimplementedZingServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedZingServer) GetMessages(*GetMessagesRequest, grpc.ServerStreamingServer[GetMessagesResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
+func (UnimplementedZingServer) ListMessages(context.Context, *ListMessagesRequest) (*ListMessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMessages not implemented")
 }
 func (UnimplementedZingServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
@@ -187,16 +178,23 @@ func _Zing_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Zing_GetMessages_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetMessagesRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _Zing_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(ZingServer).GetMessages(m, &grpc.GenericServerStream[GetMessagesRequest, GetMessagesResponse]{ServerStream: stream})
+	if interceptor == nil {
+		return srv.(ZingServer).ListMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Zing_ListMessages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ZingServer).ListMessages(ctx, req.(*ListMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Zing_GetMessagesServer = grpc.ServerStreamingServer[GetMessagesResponse]
 
 func _Zing_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendMessageRequest)
@@ -232,16 +230,14 @@ var Zing_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Zing_Logout_Handler,
 		},
 		{
+			MethodName: "ListMessages",
+			Handler:    _Zing_ListMessages_Handler,
+		},
+		{
 			MethodName: "SendMessage",
 			Handler:    _Zing_SendMessage_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "GetMessages",
-			Handler:       _Zing_GetMessages_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "api/zing.proto",
 }

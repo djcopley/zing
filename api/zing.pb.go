@@ -119,7 +119,6 @@ func (x *LoginResponse) GetToken() string {
 
 type LogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -152,13 +151,6 @@ func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
 	return file_api_zing_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *LogoutRequest) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
 }
 
 type LogoutResponse struct {
@@ -198,27 +190,37 @@ func (*LogoutResponse) Descriptor() ([]byte, []int) {
 }
 
 // GetMessageRequest sends the server the user's id and a token
-type GetMessagesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+type ListMessagesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The maximum number of messages to return. The service may return fewer than
+	// this value.
+	// If unspecified, at most 50 messages will be returned.
+	// The maximum value is 1000; values above 1000 will be coerced to 1000.
+	PageSize int32 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// A page token, received from a previous `ListMessages` call.
+	// Provide this to retrieve the subsequent page.
+	//
+	// When paginating, all other parameters provided to `ListMessages` must match
+	// the call that provided the page token.
+	PageToken     string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMessagesRequest) Reset() {
-	*x = GetMessagesRequest{}
+func (x *ListMessagesRequest) Reset() {
+	*x = ListMessagesRequest{}
 	mi := &file_api_zing_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMessagesRequest) String() string {
+func (x *ListMessagesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMessagesRequest) ProtoMessage() {}
+func (*ListMessagesRequest) ProtoMessage() {}
 
-func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
+func (x *ListMessagesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_zing_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -230,40 +232,50 @@ func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMessagesRequest.ProtoReflect.Descriptor instead.
-func (*GetMessagesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListMessagesRequest.ProtoReflect.Descriptor instead.
+func (*ListMessagesRequest) Descriptor() ([]byte, []int) {
 	return file_api_zing_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetMessagesRequest) GetToken() string {
+func (x *ListMessagesRequest) GetPageSize() int32 {
 	if x != nil {
-		return x.Token
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListMessagesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
 	}
 	return ""
 }
 
-type GetMessagesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Metadata      *MessageMetadata       `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	Message       *Message               `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+type ListMessagesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The messages for the user.
+	Messages []*Message `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+	// A token that can be sent as `page_token` to retrieve the next page.
+	// If this field is omitted, there are no subsequent pages.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMessagesResponse) Reset() {
-	*x = GetMessagesResponse{}
+func (x *ListMessagesResponse) Reset() {
+	*x = ListMessagesResponse{}
 	mi := &file_api_zing_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMessagesResponse) String() string {
+func (x *ListMessagesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMessagesResponse) ProtoMessage() {}
+func (*ListMessagesResponse) ProtoMessage() {}
 
-func (x *GetMessagesResponse) ProtoReflect() protoreflect.Message {
+func (x *ListMessagesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_api_zing_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -275,30 +287,29 @@ func (x *GetMessagesResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMessagesResponse.ProtoReflect.Descriptor instead.
-func (*GetMessagesResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListMessagesResponse.ProtoReflect.Descriptor instead.
+func (*ListMessagesResponse) Descriptor() ([]byte, []int) {
 	return file_api_zing_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetMessagesResponse) GetMetadata() *MessageMetadata {
+func (x *ListMessagesResponse) GetMessages() []*Message {
 	if x != nil {
-		return x.Metadata
+		return x.Messages
 	}
 	return nil
 }
 
-func (x *GetMessagesResponse) GetMessage() *Message {
+func (x *ListMessagesResponse) GetNextPageToken() string {
 	if x != nil {
-		return x.Message
+		return x.NextPageToken
 	}
-	return nil
+	return ""
 }
 
 type SendMessageRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	To            *User                  `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Message       *Message               `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	To            *User                  `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	Message       *Message               `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -331,13 +342,6 @@ func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SendMessageRequest.ProtoReflect.Descriptor instead.
 func (*SendMessageRequest) Descriptor() ([]byte, []int) {
 	return file_api_zing_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *SendMessageRequest) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
 }
 
 func (x *SendMessageRequest) GetTo() *User {
@@ -399,25 +403,25 @@ const file_api_zing_proto_rawDesc = "" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"%\n" +
-	"\rLogoutRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"\x10\n" +
-	"\x0eLogoutResponse\"*\n" +
-	"\x12GetMessagesRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"q\n" +
-	"\x13GetMessagesResponse\x121\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x15.zing.MessageMetadataR\bmetadata\x12'\n" +
-	"\amessage\x18\x02 \x01(\v2\r.zing.MessageR\amessage\"o\n" +
-	"\x12SendMessageRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\x12\x1a\n" +
-	"\x02to\x18\x02 \x01(\v2\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\x0f\n" +
+	"\rLogoutRequest\"\x10\n" +
+	"\x0eLogoutResponse\"Q\n" +
+	"\x13ListMessagesRequest\x12\x1b\n" +
+	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\"i\n" +
+	"\x14ListMessagesResponse\x12)\n" +
+	"\bmessages\x18\x01 \x03(\v2\r.zing.MessageR\bmessages\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"Y\n" +
+	"\x12SendMessageRequest\x12\x1a\n" +
+	"\x02to\x18\x01 \x01(\v2\n" +
 	".zing.UserR\x02to\x12'\n" +
-	"\amessage\x18\x03 \x01(\v2\r.zing.MessageR\amessage\"\x15\n" +
-	"\x13SendMessageResponse2\xf7\x01\n" +
+	"\amessage\x18\x02 \x01(\v2\r.zing.MessageR\amessage\"\x15\n" +
+	"\x13SendMessageResponse2\xf8\x01\n" +
 	"\x04Zing\x120\n" +
 	"\x05Login\x12\x12.zing.LoginRequest\x1a\x13.zing.LoginResponse\x123\n" +
-	"\x06Logout\x12\x13.zing.LogoutRequest\x1a\x14.zing.LogoutResponse\x12D\n" +
-	"\vGetMessages\x12\x18.zing.GetMessagesRequest\x1a\x19.zing.GetMessagesResponse0\x01\x12B\n" +
+	"\x06Logout\x12\x13.zing.LogoutRequest\x1a\x14.zing.LogoutResponse\x12E\n" +
+	"\fListMessages\x12\x19.zing.ListMessagesRequest\x1a\x1a.zing.ListMessagesResponse\x12B\n" +
 	"\vSendMessage\x12\x18.zing.SendMessageRequest\x1a\x19.zing.SendMessageResponseB\x1eZ\x1cgithub.com/djcopley/zing/apib\x06proto3"
 
 var (
@@ -434,36 +438,34 @@ func file_api_zing_proto_rawDescGZIP() []byte {
 
 var file_api_zing_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_api_zing_proto_goTypes = []any{
-	(*LoginRequest)(nil),        // 0: zing.LoginRequest
-	(*LoginResponse)(nil),       // 1: zing.LoginResponse
-	(*LogoutRequest)(nil),       // 2: zing.LogoutRequest
-	(*LogoutResponse)(nil),      // 3: zing.LogoutResponse
-	(*GetMessagesRequest)(nil),  // 4: zing.GetMessagesRequest
-	(*GetMessagesResponse)(nil), // 5: zing.GetMessagesResponse
-	(*SendMessageRequest)(nil),  // 6: zing.SendMessageRequest
-	(*SendMessageResponse)(nil), // 7: zing.SendMessageResponse
-	(*MessageMetadata)(nil),     // 8: zing.MessageMetadata
-	(*Message)(nil),             // 9: zing.Message
-	(*User)(nil),                // 10: zing.User
+	(*LoginRequest)(nil),         // 0: zing.LoginRequest
+	(*LoginResponse)(nil),        // 1: zing.LoginResponse
+	(*LogoutRequest)(nil),        // 2: zing.LogoutRequest
+	(*LogoutResponse)(nil),       // 3: zing.LogoutResponse
+	(*ListMessagesRequest)(nil),  // 4: zing.ListMessagesRequest
+	(*ListMessagesResponse)(nil), // 5: zing.ListMessagesResponse
+	(*SendMessageRequest)(nil),   // 6: zing.SendMessageRequest
+	(*SendMessageResponse)(nil),  // 7: zing.SendMessageResponse
+	(*Message)(nil),              // 8: zing.Message
+	(*User)(nil),                 // 9: zing.User
 }
 var file_api_zing_proto_depIdxs = []int32{
-	8,  // 0: zing.GetMessagesResponse.metadata:type_name -> zing.MessageMetadata
-	9,  // 1: zing.GetMessagesResponse.message:type_name -> zing.Message
-	10, // 2: zing.SendMessageRequest.to:type_name -> zing.User
-	9,  // 3: zing.SendMessageRequest.message:type_name -> zing.Message
-	0,  // 4: zing.Zing.Login:input_type -> zing.LoginRequest
-	2,  // 5: zing.Zing.Logout:input_type -> zing.LogoutRequest
-	4,  // 6: zing.Zing.GetMessages:input_type -> zing.GetMessagesRequest
-	6,  // 7: zing.Zing.SendMessage:input_type -> zing.SendMessageRequest
-	1,  // 8: zing.Zing.Login:output_type -> zing.LoginResponse
-	3,  // 9: zing.Zing.Logout:output_type -> zing.LogoutResponse
-	5,  // 10: zing.Zing.GetMessages:output_type -> zing.GetMessagesResponse
-	7,  // 11: zing.Zing.SendMessage:output_type -> zing.SendMessageResponse
-	8,  // [8:12] is the sub-list for method output_type
-	4,  // [4:8] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	8, // 0: zing.ListMessagesResponse.messages:type_name -> zing.Message
+	9, // 1: zing.SendMessageRequest.to:type_name -> zing.User
+	8, // 2: zing.SendMessageRequest.message:type_name -> zing.Message
+	0, // 3: zing.Zing.Login:input_type -> zing.LoginRequest
+	2, // 4: zing.Zing.Logout:input_type -> zing.LogoutRequest
+	4, // 5: zing.Zing.ListMessages:input_type -> zing.ListMessagesRequest
+	6, // 6: zing.Zing.SendMessage:input_type -> zing.SendMessageRequest
+	1, // 7: zing.Zing.Login:output_type -> zing.LoginResponse
+	3, // 8: zing.Zing.Logout:output_type -> zing.LogoutResponse
+	5, // 9: zing.Zing.ListMessages:output_type -> zing.ListMessagesResponse
+	7, // 10: zing.Zing.SendMessage:output_type -> zing.SendMessageResponse
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_api_zing_proto_init() }
