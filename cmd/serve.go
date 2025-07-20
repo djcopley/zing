@@ -17,7 +17,7 @@ var (
 
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Serve the zing server",
+	Short: "Start the zing server",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		addr := fmt.Sprintf("%s:%d", serverAddr, serverPort)
 		_, err := fmt.Fprintf(cmd.OutOrStdout(), "starting zing server @ %s\n", addr)

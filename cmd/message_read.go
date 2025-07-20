@@ -10,7 +10,7 @@ import (
 
 var messageReadCmd = &cobra.Command{
 	Use:   "read",
-	Short: "Read your messages",
+	Short: "Read the messages sent to you",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := config.GetToken()
 		if token == "" {

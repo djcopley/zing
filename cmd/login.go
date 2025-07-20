@@ -14,7 +14,7 @@ var username string
 
 var loginCmd = &cobra.Command{
 	Use:   "login [server]",
-	Short: "Login to the server",
+	Short: "Login to a server",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if username == "" {

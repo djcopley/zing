@@ -7,7 +7,7 @@ import (
 // messageCmd represents the message command
 var messageCmd = &cobra.Command{
 	Use:   "message",
-	Short: "A brief description of your command",
+	Short: "Message related subcommands",
 }
 
 func init() {

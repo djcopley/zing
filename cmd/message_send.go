@@ -13,7 +13,7 @@ import (
 
 var messageSendCmd = &cobra.Command{
 	Use:   "send [user]",
-	Short: "Message a user",
+	Short: "Send a message to a user",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := config.GetToken()
