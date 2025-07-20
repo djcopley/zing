@@ -8,7 +8,6 @@ import (
 	"github.com/djcopley/zing/config"
 	"github.com/djcopley/zing/editor"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 var messageSendCmd = &cobra.Command{
@@ -25,7 +24,7 @@ var messageSendCmd = &cobra.Command{
 		addr := config.GetServerAddr()
 		client, err := client.NewInsecureClient(addr)
 		if err != nil {
-			log.Fatalln(err)
+			return fmt.Errorf("unable to create client: %w", err)
 		}
 		defer client.Close()
 

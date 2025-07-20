@@ -3,20 +3,26 @@ package editor
 import (
 	"os"
 	"os/exec"
+	"strings"
 )
 
-func getUserEditor() string {
-	editor := os.Getenv("EDITOR")
+// getUserEditor retrieves the user's configured editor as a slice of strings. Defaults to "nano" if no editor is set.
+func getUserEditor() []string {
+	editor := os.Getenv("VISUAL")
+	if editor == "" {
+		editor = os.Getenv("EDITOR")
+	}
 	if editor == "" {
 		editor = "nano"
 	}
-	return editor
+	return strings.Fields(editor)
 }
 
 // ComposeMessage opens the user's configured editor and returns a byte slice containing the message. If no editor is
 // configured, ComposeMessage defaults to "nano".
 func ComposeMessage() (string, error) {
-	tmp, err := os.CreateTemp("/tmp", "zing_*") // todo: can I customize the * tmp id?
+	tmpDir := os.TempDir()
+	tmp, err := os.CreateTemp(tmpDir, "zing_*")
 	if err != nil {
 		return "'", err
 	}
@@ -26,7 +32,10 @@ func ComposeMessage() (string, error) {
 	}
 	defer os.Remove(tmp.Name())
 
-	cmd := exec.Command(getUserEditor(), tmp.Name())
+	editor := getUserEditor()
+	editor = append(editor, tmp.Name())
+
+	cmd := exec.Command(editor[0], editor[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"syscall"
+
 	"github.com/djcopley/zing/api"
 	"github.com/djcopley/zing/client"
 	"github.com/djcopley/zing/config"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
-	"syscall"
 )
 
 var username string
@@ -28,7 +29,10 @@ var loginCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Print("Password: ")
+		_, err := fmt.Fprintf(cmd.OutOrStdout(), "Password: ")
+		if err != nil {
+			return fmt.Errorf("failed to read password: %s", err)
+		}
 		passwordBytes, err := term.ReadPassword(syscall.Stdin)
 		if err != nil {
 			return fmt.Errorf("failed to read password: %s", err)
@@ -53,7 +57,7 @@ var loginCmd = &cobra.Command{
 			return fmt.Errorf("failed to save token: %s", err)
 		}
 
-		_, err = fmt.Fprintf(cmd.OutOrStdout(), "Login successful. Token stored.")
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), "Login successful. Token stored.")
 		return err
 	},
 }
