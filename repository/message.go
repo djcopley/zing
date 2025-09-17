@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"errors"
 	"github.com/djcopley/zing/model"
 )
 
@@ -32,7 +31,8 @@ func (m *InMemoryMessageRepository) Create(message *model.Message) error {
 func (m *InMemoryMessageRepository) Read(userId string) ([]*model.Message, error) {
 	msgs, ok := m.messages[userId]
 	if !ok {
-		return nil, errors.New("user not found")
+		// If the user has no messages yet, return an empty slice instead of an error
+		return []*model.Message{}, nil
 	}
 	return msgs, nil
 }

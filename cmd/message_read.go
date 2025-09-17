@@ -11,6 +11,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var pageSize int32
+var pageToken string
+
 var messageReadCmd = &cobra.Command{
 	Use:   "read",
 	Short: "Read the messages sent to you",
@@ -28,7 +31,7 @@ var messageReadCmd = &cobra.Command{
 		}
 		defer client.Close()
 
-		request := &api.ListMessagesRequest{}
+		request := &api.ListMessagesRequest{PageSize: pageSize, PageToken: pageToken}
 		r, err := client.ListMessages(ctx, request)
 		if err != nil {
 			return fmt.Errorf("failed to connect to server: %s", err)
@@ -41,10 +44,14 @@ var messageReadCmd = &cobra.Command{
 			for i, message := range r.Messages {
 				b.WriteString(formatMessage(message))
 				if i < len(r.Messages)-1 {
-					b.WriteString("\n")
 					b.WriteString(strings.Repeat("-", 60))
-					b.WriteString("\n\n")
+					b.WriteString("\n")
 				}
+			}
+			if r.NextPageToken != "" {
+				b.WriteString(strings.Repeat("-", 60))
+				b.WriteString("\n")
+				b.WriteString(fmt.Sprintf("More messages available. Fetch next page with: zing message read --page-token %s --page-size %d\n", r.NextPageToken, pageSize))
 			}
 		}
 
@@ -59,6 +66,8 @@ var messageReadCmd = &cobra.Command{
 
 func init() {
 	messageCmd.AddCommand(messageReadCmd)
+	messageReadCmd.Flags().Int32Var(&pageSize, "page-size", 0, "Number of messages per page (default 50, max 1000)")
+	messageReadCmd.Flags().StringVar(&pageToken, "page-token", "", "Page token from a previous response to fetch the next page")
 }
 
 func formatMessage(message *api.Message) string {

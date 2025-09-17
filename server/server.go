@@ -2,12 +2,14 @@ package server
 
 import (
 	"context"
+	"strconv"
+	"time"
+
 	"github.com/djcopley/zing/api"
 	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/service"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
-	"time"
 )
 
 var _ api.ZingServer = &Server{}
@@ -81,10 +83,42 @@ func (s *Server) ListMessages(ctx context.Context, request *api.ListMessagesRequ
 	if err != nil {
 		return nil, err
 	}
-	apiMessages := translateMessages(messages)
+
+	// Pagination parameters
+	pageSize := int(request.GetPageSize())
+	if pageSize <= 0 {
+		pageSize = 50
+	}
+	if pageSize > 1000 {
+		pageSize = 1000
+	}
+
+	// page_token is a simple integer offset encoded as a string
+	start := 0
+	if tok := request.GetPageToken(); tok != "" {
+		if off, err := strconv.Atoi(tok); err == nil && off >= 0 {
+			start = off
+		}
+	}
+	if start > len(messages) {
+		start = len(messages)
+	}
+	end := start + pageSize
+	if end > len(messages) {
+		end = len(messages)
+	}
+
+	page := messages[start:end]
+	apiMessages := translateMessages(page)
+
+	nextToken := ""
+	if end < len(messages) {
+		nextToken = strconv.Itoa(end)
+	}
+
 	response := &api.ListMessagesResponse{
 		Messages:      apiMessages,
-		NextPageToken: "", // todo
+		NextPageToken: nextToken,
 	}
 	return response, nil
 }
