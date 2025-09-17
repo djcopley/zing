@@ -19,6 +19,9 @@ service Zing {
 
   // Send a message to a user
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+
+  // Clear all messages for the authenticated user
+  rpc ClearMessages(ClearMessagesRequest) returns (ClearMessagesResponse);
 }
 
 message LoginRequest {
@@ -61,3 +64,6 @@ message SendMessageRequest {
   Message message = 2;
 }
 message SendMessageResponse {}
+
+message ClearMessagesRequest {}
+message ClearMessagesResponse {}

@@ -28,3 +28,10 @@ func (m *MessageService) GetMessages(username string) ([]*model.Message, error) 
 func (m *MessageService) CreateMessage(message *model.Message) error {
 	return m.messageRepo.Create(message)
 }
+
+func (m *MessageService) ClearMessages(username string) error {
+	if err := m.messageRepo.Clear(username); err != nil {
+		return fmt.Errorf("unable to clear messages for user %s: %v", username, err)
+	}
+	return nil
+}

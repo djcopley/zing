@@ -7,6 +7,7 @@ import (
 type MessageRepositoryInterface interface {
 	Create(message *model.Message) error
 	Read(userId string) ([]*model.Message, error)
+	Clear(userId string) error
 }
 
 var _ MessageRepositoryInterface = &InMemoryMessageRepository{}
@@ -35,4 +36,10 @@ func (m *InMemoryMessageRepository) Read(userId string) ([]*model.Message, error
 		return []*model.Message{}, nil
 	}
 	return msgs, nil
+}
+
+func (m *InMemoryMessageRepository) Clear(userId string) error {
+	// Set to an empty slice to preserve key existence semantics
+	m.messages[userId] = []*model.Message{}
+	return nil
 }

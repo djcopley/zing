@@ -32,6 +32,14 @@ type Server struct {
 	api.UnimplementedZingServer
 }
 
+func (s *Server) ClearMessages(ctx context.Context, request *api.ClearMessagesRequest) (*api.ClearMessagesResponse, error) {
+	user := getUserFromContext(ctx)
+	if err := s.messageService.ClearMessages(user.Username); err != nil {
+		return &api.ClearMessagesResponse{}, err
+	}
+	return &api.ClearMessagesResponse{}, nil
+}
+
 func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.LoginResponse, error) {
 	username := request.Username
 	password := request.Password
@@ -79,6 +87,7 @@ func (s *Server) SendMessage(ctx context.Context, request *api.SendMessageReques
 
 func (s *Server) ListMessages(ctx context.Context, request *api.ListMessagesRequest) (*api.ListMessagesResponse, error) {
 	user := getUserFromContext(ctx)
+
 	messages, err := s.messageService.GetMessages(user.Username)
 	if err != nil {
 		return nil, err
