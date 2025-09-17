@@ -18,6 +18,19 @@ func getUserEditor() []string {
 	return strings.Fields(editor)
 }
 
+// Open opens the given file path in the user's configured editor.
+// If no editor is configured, it defaults to "nano".
+func Open(path string) error {
+	editor := getUserEditor()
+	editor = append(editor, path)
+
+	cmd := exec.Command(editor[0], editor[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
 // ComposeMessage opens the user's configured editor and returns a byte slice containing the message. If no editor is
 // configured, ComposeMessage defaults to "nano".
 func ComposeMessage() (string, error) {
