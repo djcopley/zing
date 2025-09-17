@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+
 	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/repository"
 )

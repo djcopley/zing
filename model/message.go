@@ -1,10 +1,11 @@
 package model
 
 import (
+	"time"
+
 	"github.com/djcopley/zing/api"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 type MessageMetadata struct {

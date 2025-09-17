@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+
 	"github.com/djcopley/zing/model"
 	"github.com/djcopley/zing/repository"
 )

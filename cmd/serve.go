@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"net"
+
 	"github.com/djcopley/zing/repository"
 	"github.com/djcopley/zing/server"
 	"github.com/djcopley/zing/service"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc/reflection"
-	"net"
 )
 
 var (
