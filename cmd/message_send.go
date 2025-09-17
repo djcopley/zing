@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/djcopley/zing/api"
 	"github.com/djcopley/zing/client"
@@ -55,6 +56,14 @@ var messageSendCmd = &cobra.Command{
 			if err != nil {
 				return fmt.Errorf("failed to compose message: %s", err)
 			}
+		}
+
+		if message == "" {
+			return fmt.Errorf("message is empty")
+		}
+
+		if !strings.HasSuffix(message, "\n") {
+			message += "\n"
 		}
 
 		user := args[0]
