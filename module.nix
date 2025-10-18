@@ -35,7 +35,7 @@ in
       wants = [ "network-online.target" ];
 
       serviceConfig = {
-        ExecStart = ''${cfg.package}/bin/zing --port ${toString cfg.port} ${lib.concatStringsSep " " cfg.extraArgs}'';
+        ExecStart = ''${cfg.package}/bin/zing serve --addr 0.0.0.0 --port ${toString cfg.port} ${lib.concatStringsSep " " cfg.extraArgs}'';
         User = cfg.user;
         Group = cfg.group;
         Restart = "on-failure";
