@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"path/filepath"
 
@@ -78,7 +79,16 @@ func GetServerAddr() string {
 
 // SetServerAddr stores the server address
 func SetServerAddr(addr string) error {
-	viper.Set("server_addr", addr)
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return err
+	}
+	portNum, err := net.LookupPort("tcp", port)
+	if err != nil {
+		return err
+	}
+	viper.Set("server_addr", host)
+	viper.Set("server_port", portNum)
 	return viper.WriteConfig()
 }
 

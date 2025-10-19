@@ -57,6 +57,10 @@ var loginCmd = &cobra.Command{
 			return fmt.Errorf("failed to save token: %s", err)
 		}
 
+		if err := config.SetServerAddr(addr); err != nil {
+			return fmt.Errorf("failed to save server address: %s", err)
+		}
+
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), "Login successful. Token stored.")
 		return err
 	},
