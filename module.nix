@@ -15,7 +15,7 @@ in
     user = lib.mkOption { type = lib.types.str; default = "zing"; description = "User running the service"; };
     group = lib.mkOption { type = lib.types.str; default = "zing"; description = "Group running the service"; };
     dataDir = lib.mkOption { type = lib.types.path; default = "/var/lib/zing"; description = "State directory"; };
-    port = lib.mkOption { type = lib.types.port; default = 8080; description = "Port to listen on"; };
+    port = lib.mkOption { type = lib.types.port; default = 5132; description = "Port to listen on"; };
     extraArgs = lib.mkOption { type = lib.types.listOf lib.types.str; default = [ ]; description = "Extra CLI args"; };
     environment = lib.mkOption { type = lib.types.attrsOf lib.types.str; default = { }; description = "Environment variables"; };
   };

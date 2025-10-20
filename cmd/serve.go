@@ -8,6 +8,7 @@ import (
 	"github.com/djcopley/zing/server"
 	"github.com/djcopley/zing/service"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -19,34 +20,41 @@ var (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start the zing server",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		addr := fmt.Sprintf("%s:%d", serverAddr, serverPort)
-		_, err := fmt.Fprintf(cmd.OutOrStdout(), "starting zing server @ %s\n", addr)
-		if err != nil {
-			return err
-		}
+	RunE:  runServe,
+}
 
-		lis, err := net.Listen("tcp", addr)
-		if err != nil {
-			return fmt.Errorf("failed to listen: %v", err)
-		}
+func runServe(cmd *cobra.Command, args []string) error {
+	logger, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = logger.Sync() }()
 
-		userRepo := repository.NewTestInMemoryUserRepository()
-		sessionRepo := repository.NewInMemorySessionRepository()
-		messageRepo := repository.NewInMemoryMessageRepository()
+	addr := fmt.Sprintf("%s:%d", serverAddr, serverPort)
+	logger.Info("starting zing server", zap.String("addr", addr))
 
-		authService := service.NewAuthenticationService(userRepo, sessionRepo)
-		messageService := service.NewMessageService(messageRepo)
+	lis, err := net.Listen("tcp", addr)
+	if err != nil {
+		logger.Error("failed to listen", zap.String("addr", addr), zap.Error(err))
+		return fmt.Errorf("failed to listen: %v", err)
+	}
 
-		server := server.NewServer(authService, messageService)
-		reflection.Register(server)
+	userRepo := repository.NewTestInMemoryUserRepository()
+	sessionRepo := repository.NewInMemorySessionRepository()
+	messageRepo := repository.NewInMemoryMessageRepository()
 
-		if err := server.Serve(lis); err != nil {
-			return fmt.Errorf("failed to serve: %v", err)
-		}
+	authService := service.NewAuthenticationService(userRepo, sessionRepo)
+	messageService := service.NewMessageService(messageRepo)
 
-		return nil
-	},
+	s := server.NewServer(logger, authService, messageService)
+	reflection.Register(s)
+
+	if err := s.Serve(lis); err != nil {
+		logger.Error("failed to serve", zap.Error(err))
+		return fmt.Errorf("failed to serve: %v", err)
+	}
+
+	return nil
 }
 
 func init() {
