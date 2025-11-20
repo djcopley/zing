@@ -1,4 +1,3 @@
-final: prev:
-{
+final: prev: {
   zing = final.callPackage ./package.nix { };
 }

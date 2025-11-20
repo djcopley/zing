@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.zing;
 in
@@ -12,12 +17,36 @@ in
       description = "Package providing the zing binary";
     };
 
-    user = lib.mkOption { type = lib.types.str; default = "zing"; description = "User running the service"; };
-    group = lib.mkOption { type = lib.types.str; default = "zing"; description = "Group running the service"; };
-    dataDir = lib.mkOption { type = lib.types.path; default = "/var/lib/zing"; description = "State directory"; };
-    port = lib.mkOption { type = lib.types.port; default = 5132; description = "Port to listen on"; };
-    extraArgs = lib.mkOption { type = lib.types.listOf lib.types.str; default = [ ]; description = "Extra CLI args"; };
-    environment = lib.mkOption { type = lib.types.attrsOf lib.types.str; default = { }; description = "Environment variables"; };
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "zing";
+      description = "User running the service";
+    };
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "zing";
+      description = "Group running the service";
+    };
+    dataDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/zing";
+      description = "State directory";
+    };
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 5132;
+      description = "Port to listen on";
+    };
+    extraArgs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Extra CLI args";
+    };
+    environment = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      description = "Environment variables";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -40,31 +69,9 @@ in
         Group = cfg.group;
         Restart = "on-failure";
         WorkingDirectory = cfg.dataDir;
-        StateDirectory = [ (baseNameOf cfg.dataDir) ];
-        StateDirectoryMode = "0750";
-        # Hardening (tune as needed)
-        AmbientCapabilities = "";
-        CapabilityBoundingSet = "";
-        DevicePolicy = "closed";
-        LockPersonality = true;
-        MemoryDenyWriteExecute = true;
-        NoNewPrivileges = true;
-        PrivateDevices = true;
-        PrivateTmp = true;
-        ProtectClock = true;
-        ProtectControlGroups = true;
-        ProtectHome = true;
-        ProtectHostname = true;
-        ProtectKernelLogs = true;
-        ProtectKernelModules = true;
-        ProtectKernelTunables = true;
-        ProtectSystem = "strict";
-        RestrictSUIDSGID = true;
-        RestrictAddressFamilies = [ "AF_INET" "AF_INET6" "AF_UNIX" ];
-        SystemCallArchitectures = "native";
-        UMask = "0027";
       };
 
+      networking.firewall.allowedTCPPorts = [ cfg.port ];
       environment = cfg.environment;
     };
   };
