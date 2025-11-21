@@ -1,3 +1,0 @@
-localhost {
-    reverse_proxy h2c://localhost:5132
-}

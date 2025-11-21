@@ -4,12 +4,13 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"log"
+
 	"github.com/djcopley/zing/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
-	"log"
 )
 
 type Client struct {

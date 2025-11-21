@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"github.com/djcopley/zing/model"
-	"github.com/google/uuid"
 	"testing"
 	"time"
+
+	"github.com/djcopley/zing/model"
+	"github.com/google/uuid"
 )
 
 func TestCreateMessage(t *testing.T) {
