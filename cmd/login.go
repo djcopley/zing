@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"syscall"
 
-	"github.com/djcopley/zing/api"
-	"github.com/djcopley/zing/client"
-	"github.com/djcopley/zing/config"
+	"github.com/djcopley/zing/internal/api"
+	"github.com/djcopley/zing/internal/client"
+	"github.com/djcopley/zing/internal/config"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )

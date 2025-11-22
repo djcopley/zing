@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/djcopley/zing/editor"
+	"github.com/djcopley/zing/internal/editor"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

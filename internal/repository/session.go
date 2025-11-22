@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 
-	"github.com/djcopley/zing/model"
+	"github.com/djcopley/zing/internal/model"
 )
 
 type SessionRepositoryInterface interface {

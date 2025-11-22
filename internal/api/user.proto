@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package zing;
 
-option go_package = "github.com/djcopley/zing/api";
+option go_package = "github.com/djcopley/zing/internal/api";
 
 message User {
   string username = 1;

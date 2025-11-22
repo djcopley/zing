@@ -6,7 +6,7 @@ import (
 	"crypto/x509"
 	"log"
 
-	"github.com/djcopley/zing/api"
+	"github.com/djcopley/zing/internal/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"

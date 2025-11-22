@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/djcopley/zing/model"
-	"github.com/djcopley/zing/service"
+	"github.com/djcopley/zing/internal/model"
+	"github.com/djcopley/zing/internal/service"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

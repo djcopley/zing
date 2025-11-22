@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/djcopley/zing/model"
+	"github.com/djcopley/zing/internal/model"
 )
 
 type MessageRepositoryInterface interface {

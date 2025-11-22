@@ -3,8 +3,8 @@ package service
 import (
 	"fmt"
 
-	"github.com/djcopley/zing/model"
-	"github.com/djcopley/zing/repository"
+	"github.com/djcopley/zing/internal/model"
+	"github.com/djcopley/zing/internal/repository"
 )
 
 func NewMessageService(messageRepo repository.MessageRepositoryInterface) *MessageService {

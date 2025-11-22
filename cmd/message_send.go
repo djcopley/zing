@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/djcopley/zing/api"
-	"github.com/djcopley/zing/client"
-	"github.com/djcopley/zing/config"
-	"github.com/djcopley/zing/editor"
+	api2 "github.com/djcopley/zing/internal/api"
+	"github.com/djcopley/zing/internal/client"
+	"github.com/djcopley/zing/internal/config"
+	"github.com/djcopley/zing/internal/editor"
 	"github.com/spf13/cobra"
 )
 
@@ -67,9 +67,9 @@ var messageSendCmd = &cobra.Command{
 		}
 
 		user := args[0]
-		_, err = client.SendMessage(ctx, &api.SendMessageRequest{
-			To:      &api.User{Username: user},
-			Message: &api.Message{Content: message},
+		_, err = client.SendMessage(ctx, &api2.SendMessageRequest{
+			To:      &api2.User{Username: user},
+			Message: &api2.Message{Content: message},
 		})
 		if err != nil {
 			return fmt.Errorf("failed to send message: %s", err)

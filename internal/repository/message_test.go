@@ -4,21 +4,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/djcopley/zing/model"
+	model2 "github.com/djcopley/zing/internal/model"
 	"github.com/google/uuid"
 )
 
 func TestCreateMessage(t *testing.T) {
 	repo := NewInMemoryMessageRepository()
-	message := &model.Message{
+	message := &model2.Message{
 		Content: "This is a test message",
-		Metadata: model.MessageMetadata{
+		Metadata: model2.MessageMetadata{
 			Id: uuid.New(),
-			To: model.User{
+			To: model2.User{
 				Username: "test_to",
 				Password: "test",
 			},
-			From: model.User{
+			From: model2.User{
 				Username: "test_from",
 				Password: "test",
 			},

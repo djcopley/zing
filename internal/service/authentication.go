@@ -5,11 +5,11 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/djcopley/zing/model"
-	"github.com/djcopley/zing/repository"
+	"github.com/djcopley/zing/internal/model"
+	repository2 "github.com/djcopley/zing/internal/repository"
 )
 
-func NewAuthenticationService(userRepo repository.UserRepositoryInterface, sessionRepo repository.SessionRepositoryInterface) *AuthenticationService {
+func NewAuthenticationService(userRepo repository2.UserRepositoryInterface, sessionRepo repository2.SessionRepositoryInterface) *AuthenticationService {
 	return &AuthenticationService{
 		userRepo:    userRepo,
 		sessionRepo: sessionRepo,
@@ -17,8 +17,8 @@ func NewAuthenticationService(userRepo repository.UserRepositoryInterface, sessi
 }
 
 type AuthenticationService struct {
-	userRepo    repository.UserRepositoryInterface
-	sessionRepo repository.SessionRepositoryInterface
+	userRepo    repository2.UserRepositoryInterface
+	sessionRepo repository2.SessionRepositoryInterface
 }
 
 func (as *AuthenticationService) Login(username string, password string) (string, error) {

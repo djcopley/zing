@@ -3,7 +3,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/djcopley/zing/config"
+	"github.com/djcopley/zing/internal/config"
 	"github.com/spf13/cobra"
 )
 

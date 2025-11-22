@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/djcopley/zing/repository"
-	"github.com/djcopley/zing/server"
-	"github.com/djcopley/zing/service"
+	repository2 "github.com/djcopley/zing/internal/repository"
+	"github.com/djcopley/zing/internal/server"
+	service2 "github.com/djcopley/zing/internal/service"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/reflection"
@@ -39,12 +39,12 @@ func runServe(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
-	userRepo := repository.NewTestInMemoryUserRepository()
-	sessionRepo := repository.NewInMemorySessionRepository()
-	messageRepo := repository.NewInMemoryMessageRepository()
+	userRepo := repository2.NewTestInMemoryUserRepository()
+	sessionRepo := repository2.NewInMemorySessionRepository()
+	messageRepo := repository2.NewInMemoryMessageRepository()
 
-	authService := service.NewAuthenticationService(userRepo, sessionRepo)
-	messageService := service.NewMessageService(messageRepo)
+	authService := service2.NewAuthenticationService(userRepo, sessionRepo)
+	messageService := service2.NewMessageService(messageRepo)
 
 	s := server.NewServer(logger, authService, messageService)
 	reflection.Register(s)
