@@ -18,7 +18,7 @@ import (
 
 var (
 	serverAddr = "localhost"
-	serverPort = 5132
+	serverPort = 50051
 )
 
 var serveCmd = &cobra.Command{

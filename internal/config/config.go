@@ -31,7 +31,7 @@ func InitConfig() {
 	viper.AddConfigPath(".")
 
 	viper.SetDefault("server_addr", "localhost")
-	viper.SetDefault("server_port", 5132)
+	viper.SetDefault("server_port", 50051)
 	viper.SetDefault("token", "")
 
 	if err := viper.ReadInConfig(); err != nil {

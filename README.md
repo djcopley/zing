@@ -15,11 +15,11 @@ What you can do:
 
 ## Serve (start the server)
 - ./build/zing serve
-- Defaults: localhost:5132
+- Defaults: localhost:50051
 - Change host/port: ./build/zing serve -a 0.0.0.0 -p 50051
 
 ## Login
-- ./build/zing login localhost:5132
+- ./build/zing login localhost:50051
 - You’ll be prompted for username and password.
 - Demo users (built-in):
   - user1 / pass
@@ -44,7 +44,7 @@ Zing stores settings and your auth token in a config file.
 
 Default keys:
 - server_addr = "localhost"
-- server_port = 5132
+- server_port = 50051
 - token = ""  (filled after successful login)
 
 Notes:
