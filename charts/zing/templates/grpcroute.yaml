@@ -1,0 +1,38 @@
+{{- if .Values.grpcRoute.enabled -}}
+{{- $fullName := include "zing.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "zing.labels" . | nindent 4 }}
+  {{- with .Values.grpcRoute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- with .Values.grpcRoute.parentRefs }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.grpcRoute.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range .Values.grpcRoute.rules }}
+    {{- with .matches }}
+    - matches:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .filters }}
+      filters:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+      backendRefs:
+        - name: {{ $fullName }}
+          port: {{ $svcPort }}
+          weight: 1
+    {{- end }}
+{{- end }}
