@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"net"
 
+	api2 "github.com/djcopley/zing/internal/api"
 	repository2 "github.com/djcopley/zing/internal/repository"
 	"github.com/djcopley/zing/internal/server"
 	service2 "github.com/djcopley/zing/internal/service"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -46,10 +50,22 @@ func runServe(cmd *cobra.Command, args []string) error {
 	authService := service2.NewAuthenticationService(userRepo, sessionRepo)
 	messageService := service2.NewMessageService(messageRepo)
 
-	s := server.NewServer(logger, authService, messageService)
-	reflection.Register(s)
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			server.NewLoggingInterceptor(logger),
+			server.NewAuthInterceptor(authService),
+		),
+	)
+	reflection.Register(grpcServer)
 
-	if err := s.Serve(lis); err != nil {
+	zingService := server.NewServer(authService, messageService)
+	api2.RegisterZingServer(grpcServer, zingService)
+
+	healthService := health.NewServer()
+	healthService.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+	healthpb.RegisterHealthServer(grpcServer, healthService)
+
+	if err := grpcServer.Serve(lis); err != nil {
 		logger.Error("failed to serve", zap.Error(err))
 		return fmt.Errorf("failed to serve: %v", err)
 	}

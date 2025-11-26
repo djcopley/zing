@@ -9,32 +9,20 @@ import (
 	model2 "github.com/djcopley/zing/internal/model"
 	service2 "github.com/djcopley/zing/internal/service"
 	"github.com/google/uuid"
-	"go.uber.org/zap"
-	"google.golang.org/grpc"
 )
 
 var _ api2.ZingServer = &Server{}
 
-func NewServer(logger *zap.Logger, authService *service2.AuthenticationService, messageService *service2.MessageService) *grpc.Server {
-	grpcServer := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(
-			newLoggingInterceptor(logger),
-			newAuthInterceptor(authService),
-		),
-	)
-	zingServer := &Server{
+func NewServer(authService *service2.AuthenticationService, messageService *service2.MessageService) *Server {
+	return &Server{
 		authService:    authService,
 		messageService: messageService,
-		logger:         logger,
 	}
-	api2.RegisterZingServer(grpcServer, zingServer)
-	return grpcServer
 }
 
 type Server struct {
 	authService    *service2.AuthenticationService
 	messageService *service2.MessageService
-	logger         *zap.Logger
 	api2.UnimplementedZingServer
 }
 

@@ -20,7 +20,10 @@ type userContextKey struct{}
 func shouldSkipAuth(fullMethod string) bool {
 	switch fullMethod {
 	case "/zing.Zing/Login",
-		"/zing.Zing/Register":
+		"/zing.Zing/Register",
+		"/grpc.health.v1.Health/Check",
+		"/grpc.health.v1.Health/List",
+		"/grpc.health.v1.Health/Watch":
 		return true
 	default:
 		return false
@@ -32,7 +35,7 @@ func getUserFromContext(ctx context.Context) *model.User {
 	return user
 }
 
-func newAuthInterceptor(authService *service.AuthenticationService) grpc.UnaryServerInterceptor {
+func NewAuthInterceptor(authService *service.AuthenticationService) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{},
@@ -68,7 +71,7 @@ func newAuthInterceptor(authService *service.AuthenticationService) grpc.UnarySe
 	}
 }
 
-func newLoggingInterceptor(logger *zap.Logger) grpc.UnaryServerInterceptor {
+func NewLoggingInterceptor(logger *zap.Logger) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{},
