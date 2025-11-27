@@ -46,7 +46,8 @@ func NewSecureClient(address string) (*Client, error) {
 	}
 
 	tlsConfig := &tls.Config{
-		RootCAs: certPool,
+		RootCAs:            certPool,
+		InsecureSkipVerify: true,
 	}
 	creds := credentials.NewTLS(tlsConfig)
 

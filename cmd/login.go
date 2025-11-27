@@ -40,7 +40,7 @@ var loginCmd = &cobra.Command{
 		password := string(passwordBytes)
 
 		addr := args[0]
-		client, err := client.NewInsecureClient(addr)
+		client, err := client.NewSecureClient(addr)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %s", err)
 		}

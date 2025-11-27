@@ -41,13 +41,16 @@ podLabels: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+   capabilities:
+     drop:
+     - ALL
+   readOnlyRootFilesystem: true
+   runAsNonRoot: true
+   runAsUser: 1000
+   allowPrivilegeEscalation: false
+   seccompProfile:
+     type: "RuntimeDefault"
 
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
@@ -73,13 +76,13 @@ ingress:
     #   hosts:
     #     - chart-example.local
 
-# -- Expose the service via gateway-api HTTPRoute
+# -- Expose the service via gateway-api GRPCRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
 # (see: https://gateway-api.sigs.k8s.io/guides/)
 grpcRoute:
-  # HTTPRoute enabled.
+  # GRPCRoute enabled.
   enabled: false
-  # HTTPRoute annotations.
+  # GRPCRoute annotations.
   annotations: {}
   # Which Gateways this Route is attached to.
   parentRefs:
@@ -92,24 +95,11 @@ grpcRoute:
   # List of rules and filters applied.
   rules:
   - matches:
-    - path:
-        type: PathPrefix
-        value: /headers
-  #   filters:
-  #   - type: RequestHeaderModifier
-  #     requestHeaderModifier:
-  #       set:
-  #       - name: My-Overwrite-Header
-  #         value: this-is-the-only-value
-  #       remove:
-  #       - User-Agent
+    - method:
+        service: zing.Zing
   # - matches:
-  #   - path:
-  #       type: PathPrefix
-  #       value: /echo
-  #     headers:
-  #     - name: version
-  #       value: v2
+  #     - method:
+  #         service: grpc.reflection.v1.ServerReflection
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -162,3 +152,5 @@ affinity: {}
 
 redis:
   architecture: standalone
+
+postgresql: {}
