@@ -25,7 +25,7 @@ var messageReadCmd = &cobra.Command{
 		ctx := client.AddAuthMetadata(cmd.Context(), token)
 
 		addr := config.GetServerAddr()
-		client, err := client.NewInsecureClient(addr)
+		client, err := client.NewClient(addr, insecureFlag, plaintextFlag)
 		if err != nil {
 			return fmt.Errorf("failed to connect to server: %s", err)
 		}

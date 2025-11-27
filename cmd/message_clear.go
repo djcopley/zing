@@ -20,7 +20,7 @@ var messageClearCmd = &cobra.Command{
 		ctx := client.AddAuthMetadata(cmd.Context(), token)
 
 		addr := config.GetServerAddr()
-		c, err := client.NewInsecureClient(addr)
+		c, err := client.NewClient(addr, insecureFlag, plaintextFlag)
 		if err != nil {
 			return fmt.Errorf("failed to connect to server: %s", err)
 		}
