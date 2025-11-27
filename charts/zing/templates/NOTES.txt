@@ -5,6 +5,11 @@
 {{- else }}
     export APP_HOSTNAME=$(kubectl get --namespace {{(first .Values.grpcRoute.parentRefs).namespace | default .Release.Namespace }} gateway/{{ (first .Values.grpcRoute.parentRefs).name }} -o jsonpath="{.spec.listeners[0].hostname}")
   {{- end }}
+{{- if .Values.grpcRoute.enabled }}
+    NOTE: Your GRPCRoute depends on the listener configuration of your gateway and your GRPCRoute rules.
+    The rules can be set for path, method, header and query parameters.
+    You can check the gateway configuration with 'kubectl get --namespace {{(first .Values.grpcRoute.parentRefs).namespace | default .Release.Namespace }} gateway/{{ (first .Values.grpcRoute.parentRefs).name }} -o yaml'
+{{- end }}
 {{- else if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
