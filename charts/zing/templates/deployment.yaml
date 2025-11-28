@@ -44,6 +44,38 @@ spec:
             - name: grpc
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if .Values.app.redis.enabled }}
+          env:
+            {{- if .Values.app.redis.addr }}
+            - name: REDIS_ADDR
+              value: {{ .Values.app.redis.addr | quote }}
+            {{- else if .Values.app.redis.host }}
+            - name: REDIS_ADDR
+              value: {{ printf "%s:%v" .Values.app.redis.host (default 6379 .Values.app.redis.port) | quote }}
+            {{- end }}
+            {{- if .Values.app.redis.username }}
+            - name: REDIS_USERNAME
+              value: {{ .Values.app.redis.username | quote }}
+            {{- end }}
+            {{- if .Values.app.redis.existingSecret }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.redis.existingSecret }}
+                  key: {{ .Values.app.redis.existingSecretPasswordKey }}
+            {{- else if .Values.app.redis.password }}
+            - name: REDIS_PASSWORD
+              value: {{ .Values.app.redis.password | quote }}
+            {{- end }}
+            {{- if hasKey .Values.app.redis "db" }}
+            - name: REDIS_DB
+              value: {{ .Values.app.redis.db | quote }}
+            {{- end }}
+            {{- if hasKey .Values.app.redis "tls" }}
+            - name: REDIS_TLS
+              value: {{ ternary "true" "false" .Values.app.redis.tls | quote }}
+            {{- end }}
+          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

@@ -109,9 +109,32 @@ resources: {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+
+# Application-level Redis connection configuration
+# These values control ENV variables injected into the zing container so the app can
+# connect to Redis without hardcoding addresses.
+# Note: This is separate from the bundled Bitnami Redis subchart values; use this
+# section to point the application at any Redis instance (internal or external).
+app:
+  redis:
+    # When enabled, the Deployment will inject REDIS_* env vars into the container.
+    enabled: false
+    # If set, this full address (host:port) is used and overrides host/port below.
+    addr: ""
+    # If addr is empty, you can provide host and port to build REDIS_ADDR.
+    host: ""
+    port: 6379
+    # Optional username for ACL-enabled Redis.
+    username: ""
+    # Provide the password via an existing Secret if possible (recommended).
+    existingSecret: ""
+    existingSecretPasswordKey: "redis-password"
+    # Alternatively, set a plaintext password here (not recommended for production).
+    password: ""
+    # Database index number.
+    db: 0
+    # Use TLS to connect to Redis.
+    tls: false
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:

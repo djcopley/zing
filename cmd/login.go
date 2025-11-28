@@ -6,7 +6,6 @@ import (
 
 	"github.com/djcopley/zing/internal/api"
 	"github.com/djcopley/zing/internal/client"
-	"github.com/djcopley/zing/internal/config"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )

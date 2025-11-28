@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	api2 "github.com/djcopley/zing/internal/api"
+	"github.com/djcopley/zing/internal/api"
 	"github.com/djcopley/zing/internal/client"
-	"github.com/djcopley/zing/internal/config"
 	"github.com/djcopley/zing/internal/pager"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +30,7 @@ var messageReadCmd = &cobra.Command{
 		}
 		defer client.Close()
 
-		request := &api2.ListMessagesRequest{PageSize: pageSize, PageToken: pageToken}
+		request := &api.ListMessagesRequest{PageSize: pageSize, PageToken: pageToken}
 		r, err := client.ListMessages(ctx, request)
 		if err != nil {
 			return fmt.Errorf("failed to connect to server: %s", err)
@@ -70,7 +69,7 @@ func init() {
 	messageReadCmd.Flags().StringVar(&pageToken, "page-token", "", "Page token from a previous response to fetch the next page")
 }
 
-func formatMessage(message *api2.Message) string {
+func formatMessage(message *api.Message) string {
 	// Timestamp formatting (local time)
 	var ts string
 	if message.Metadata != nil && message.Metadata.Timestamp != nil {

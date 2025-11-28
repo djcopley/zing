@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	api2 "github.com/djcopley/zing/internal/api"
-	repository2 "github.com/djcopley/zing/internal/repository"
+	"github.com/djcopley/zing/internal/api"
+	"github.com/djcopley/zing/internal/repository"
 	"github.com/djcopley/zing/internal/server"
-	service2 "github.com/djcopley/zing/internal/service"
+	"github.com/djcopley/zing/internal/service"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -43,12 +43,12 @@ func runServe(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
-	userRepo := repository2.NewTestInMemoryUserRepository()
-	sessionRepo := repository2.NewInMemorySessionRepository()
-	messageRepo := repository2.NewInMemoryMessageRepository()
+	userRepo := repository.NewTestInMemoryUserRepository()
+	sessionRepo := repository.NewInMemorySessionRepository()
+	messageRepo := repository.NewInMemoryMessageRepository()
 
-	authService := service2.NewAuthenticationService(userRepo, sessionRepo)
-	messageService := service2.NewMessageService(messageRepo)
+	authService := service.NewAuthenticationService(userRepo, sessionRepo)
+	messageService := service.NewMessageService(messageRepo)
 
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
@@ -59,7 +59,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 	reflection.Register(grpcServer)
 
 	zingService := server.NewServer(authService, messageService)
-	api2.RegisterZingServer(grpcServer, zingService)
+	api.RegisterZingServer(grpcServer, zingService)
 
 	healthService := health.NewServer()
 	healthService.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)

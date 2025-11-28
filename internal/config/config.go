@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -19,66 +20,58 @@ func getConfigDir() (string, error) {
 	return filepath.Join(configDir, "zing"), nil
 }
 
-// InitConfig initializes the viper configuration
-func InitConfig() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("toml")
+type Config struct {
+	v *viper.Viper
+}
+
+// NewConfig initializes the viper configuration
+func NewConfig() *Config {
+	v := viper.New()
+	v.SetConfigName("config")
+	v.SetConfigType("toml")
 
 	zingConfigDir, err := getConfigDir()
 	if err == nil {
-		viper.AddConfigPath(zingConfigDir)
+		v.AddConfigPath(zingConfigDir)
 	}
-	viper.AddConfigPath(".")
+	v.AddConfigPath(".")
 
-	viper.SetDefault("server_addr", "localhost")
-	viper.SetDefault("server_port", 50051)
-	viper.SetDefault("token", "")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
+	v.SetDefault("server_addr", "localhost")
+	v.SetDefault("server_port", 50051)
+	v.SetDefault("token", "")
+
+	v.SetDefault("redis.addr", "")
+	v.SetDefault("redis.username", "")
+	v.SetDefault("redis.password", "")
+	v.SetDefault("redis.db", 0)
+	v.SetDefault("redis.tls", false)
+
+	if err := v.ReadInConfig(); err != nil {
 		var configFileNotFoundError viper.ConfigFileNotFoundError
 		if !errors.As(err, &configFileNotFoundError) {
 			log.Printf("Error reading config file: %s\n", err)
 		}
 	}
+
+	return &Config{v: v}
 }
 
-// EnsureConfigFile ensures that the config file exists
-func EnsureConfigFile() error {
-	if viper.ConfigFileUsed() != "" {
-		return nil
-	}
-
-	configDir, err := getConfigDir()
-	if err != nil {
-		return err
-	}
-
-	if err := os.MkdirAll(configDir, 0755); err != nil {
-		return err
-	}
-
-	configFile := filepath.Join(configDir, "config.toml")
-	if _, err := os.Stat(configFile); os.IsNotExist(err) {
-		f, err := os.Create(configFile)
-		if err != nil {
-			return err
-		}
-		f.Close()
-	}
-
-	viper.SetConfigFile(configFile)
-	return viper.WriteConfig()
+func (c *Config) ConfigFileUsed() string {
+	return c.v.ConfigFileUsed()
 }
 
 // GetServerAddr returns the configured server address in the form of host:port
-func GetServerAddr() string {
-	addr := viper.GetString("server_addr")
-	port := viper.GetInt("server_port")
+func (c *Config) GetServerAddr() string {
+	addr := c.v.GetString("server_addr")
+	port := c.v.GetInt("server_port")
 	return fmt.Sprintf("%s:%d", addr, port)
 }
 
 // SetServerAddr stores the server address
-func SetServerAddr(addr string) error {
+func (c *Config) SetServerAddr(addr string) error {
 	host, port, err := net.SplitHostPort(addr)
 	if err != nil {
 		return err
@@ -87,18 +80,45 @@ func SetServerAddr(addr string) error {
 	if err != nil {
 		return err
 	}
-	viper.Set("server_addr", host)
-	viper.Set("server_port", portNum)
-	return viper.WriteConfig()
+	c.v.Set("server_addr", host)
+	c.v.Set("server_port", portNum)
+	return c.v.WriteConfig()
 }
 
 // GetToken returns the stored authentication token
-func GetToken() string {
-	return viper.GetString("token")
+func (c *Config) GetToken() string {
+	return c.v.GetString("token")
 }
 
 // SetToken stores the authentication token
-func SetToken(token string) error {
-	viper.Set("token", token)
-	return viper.WriteConfig()
+func (c *Config) SetToken(token string) error {
+	c.v.Set("token", token)
+	return c.v.WriteConfig()
+}
+
+// Redis configuration helpers
+
+// GetRedisAddr returns the Redis address in the form host:port
+func (c *Config) GetRedisAddr() string {
+	return c.v.GetString("redis.addr2")
+}
+
+// GetRedisUsername returns the Redis username, if any (for ACLs)
+func (c *Config) GetRedisUsername() string {
+	return c.v.GetString("redis.username")
+}
+
+// GetRedisPassword returns the Redis password
+func (c *Config) GetRedisPassword() string {
+	return c.v.GetString("redis.password")
+}
+
+// GetRedisDB returns the Redis database number
+func (c *Config) GetRedisDB() int {
+	return c.v.GetInt("redis.db")
+}
+
+// GetRedisTLS indicates whether TLS should be used for Redis connections
+func (c *Config) GetRedisTLS() bool {
+	return c.v.GetBool("redis.tls")
 }
