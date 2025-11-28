@@ -46,10 +46,7 @@ spec:
               protocol: TCP
           {{- if .Values.app.redis.enabled }}
           env:
-            {{- if .Values.app.redis.addr }}
-            - name: REDIS_ADDR
-              value: {{ .Values.app.redis.addr | quote }}
-            {{- else if .Values.app.redis.host }}
+            {{- if .Values.app.redis.host }}
             - name: REDIS_ADDR
               value: {{ printf "%s:%v" .Values.app.redis.host (default 6379 .Values.app.redis.port) | quote }}
             {{- end }}

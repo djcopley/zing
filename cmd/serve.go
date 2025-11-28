@@ -8,6 +8,7 @@ import (
 	"github.com/djcopley/zing/internal/repository"
 	"github.com/djcopley/zing/internal/server"
 	"github.com/djcopley/zing/internal/service"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -43,9 +44,16 @@ func runServe(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
-	userRepo := repository.NewTestInMemoryUserRepository()
-	sessionRepo := repository.NewInMemorySessionRepository()
-	messageRepo := repository.NewInMemoryMessageRepository()
+	r := redis.NewClient(&redis.Options{
+		Addr:     config.GetRedisAddr(),
+		Username: config.GetRedisUsername(),
+		Password: config.GetRedisPassword(),
+		DB:       config.GetRedisDB(),
+	})
+
+	userRepo := repository.NewRedisUserRepository(r)
+	sessionRepo := repository.NewRedisSessionRepository(r)
+	messageRepo := repository.NewRedisMessageRepository(r)
 
 	authService := service.NewAuthenticationService(userRepo, sessionRepo)
 	messageService := service.NewMessageService(messageRepo)
@@ -76,5 +84,5 @@ func runServe(cmd *cobra.Command, args []string) error {
 func init() {
 	rootCmd.AddCommand(serveCmd)
 	serveCmd.Flags().StringVarP(&serverAddr, "addr", "a", serverAddr, "Server address to bind to")
-	serveCmd.Flags().IntVarP(&serverPort, "port", "p", serverPort, "Server port to bind to")
+	serveCmd.Flags().IntVarP(&serverPort, "port", "", serverPort, "Server port to bind to")
 }

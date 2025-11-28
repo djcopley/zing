@@ -60,7 +60,7 @@ func NewAuthInterceptor(authService *service.AuthenticationService) grpc.UnarySe
 		bearer := authHeaders[0]
 		token := strings.Split(bearer, " ")[1]
 
-		user, err := authService.ValidateToken(token)
+		user, err := authService.ValidateToken(context.TODO(), token)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, "invalid token")
 		}

@@ -38,7 +38,7 @@ var messageReadCmd = &cobra.Command{
 
 		var b strings.Builder
 		if len(r.Messages) == 0 {
-			b.WriteString("No messages.\n")
+			b.WriteString("No new messages.\n")
 		} else {
 			for i, message := range r.Messages {
 				b.WriteString(formatMessage(message))

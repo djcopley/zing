@@ -5,5 +5,5 @@ buildGoModule {
   version = "0.1.0";
   src = lib.cleanSource ./.;
 
-  vendorHash = "sha256-cvNRzsZXyVwbXT1Mp87XSpTTiFFzOJ1EZFWs93R8jCo=";
+  vendorHash = "sha256-1aVzQVp2/Tb99Ai226NMTSQN1u7iL9veHkZrgrf3QUc=";
 }

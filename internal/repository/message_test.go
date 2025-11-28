@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -25,7 +26,7 @@ func TestCreateMessage(t *testing.T) {
 			Timestamp: time.Now(),
 		},
 	}
-	err := repo.Create(message)
+	err := repo.Create(context.TODO(), message)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

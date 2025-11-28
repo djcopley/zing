@@ -39,7 +39,7 @@ func NewConfig() *Config {
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
 
-	v.SetDefault("server_addr", "localhost")
+	v.SetDefault("server_host", "localhost")
 	v.SetDefault("server_port", 50051)
 	v.SetDefault("token", "")
 
@@ -65,7 +65,7 @@ func (c *Config) ConfigFileUsed() string {
 
 // GetServerAddr returns the configured server address in the form of host:port
 func (c *Config) GetServerAddr() string {
-	addr := c.v.GetString("server_addr")
+	addr := c.v.GetString("server_host")
 	port := c.v.GetInt("server_port")
 	return fmt.Sprintf("%s:%d", addr, port)
 }
@@ -80,7 +80,7 @@ func (c *Config) SetServerAddr(addr string) error {
 	if err != nil {
 		return err
 	}
-	c.v.Set("server_addr", host)
+	c.v.Set("server_host", host)
 	c.v.Set("server_port", portNum)
 	return c.v.WriteConfig()
 }
@@ -100,7 +100,7 @@ func (c *Config) SetToken(token string) error {
 
 // GetRedisAddr returns the Redis address in the form host:port
 func (c *Config) GetRedisAddr() string {
-	return c.v.GetString("redis.addr2")
+	return c.v.GetString("redis.addr")
 }
 
 // GetRedisUsername returns the Redis username, if any (for ACLs)

@@ -1,15 +1,26 @@
 package service
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
 
 	"github.com/djcopley/zing/internal/model"
-	repository2 "github.com/djcopley/zing/internal/repository"
 )
 
-func NewAuthenticationService(userRepo repository2.UserRepositoryInterface, sessionRepo repository2.SessionRepositoryInterface) *AuthenticationService {
+type UserRepositoryInterface interface {
+	CreateUser(ctx context.Context, username, password string) error
+	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
+}
+
+type SessionRepositoryInterface interface {
+	Create(ctx context.Context, token string, user *model.User) error
+	Read(ctx context.Context, token string) (*model.User, error)
+	Delete(ctx context.Context, token string) error
+}
+
+func NewAuthenticationService(userRepo UserRepositoryInterface, sessionRepo SessionRepositoryInterface) *AuthenticationService {
 	return &AuthenticationService{
 		userRepo:    userRepo,
 		sessionRepo: sessionRepo,
@@ -17,12 +28,12 @@ func NewAuthenticationService(userRepo repository2.UserRepositoryInterface, sess
 }
 
 type AuthenticationService struct {
-	userRepo    repository2.UserRepositoryInterface
-	sessionRepo repository2.SessionRepositoryInterface
+	userRepo    UserRepositoryInterface
+	sessionRepo SessionRepositoryInterface
 }
 
-func (as *AuthenticationService) Login(username string, password string) (string, error) {
-	user, err := as.userRepo.GetUserByUsername(username)
+func (as *AuthenticationService) Login(ctx context.Context, username string, password string) (string, error) {
+	user, err := as.userRepo.GetUserByUsername(ctx, username)
 	if err != nil {
 		return "", err
 	}
@@ -33,23 +44,23 @@ func (as *AuthenticationService) Login(username string, password string) (string
 	if err != nil {
 		return "", err
 	}
-	err = as.sessionRepo.Create(token, user)
+	err = as.sessionRepo.Create(ctx, token, user)
 	if err != nil {
 		return "", err
 	}
 	return token, nil
 }
 
-func (as *AuthenticationService) Logout(token string) error {
-	err := as.sessionRepo.Delete(token)
+func (as *AuthenticationService) Logout(ctx context.Context, token string) error {
+	err := as.sessionRepo.Delete(ctx, token)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (as *AuthenticationService) ValidateToken(token string) (*model.User, error) {
-	user, err := as.sessionRepo.Read(token)
+func (as *AuthenticationService) ValidateToken(ctx context.Context, token string) (*model.User, error) {
+	user, err := as.sessionRepo.Read(ctx, token)
 	if err != nil {
 		return nil, err
 	}
