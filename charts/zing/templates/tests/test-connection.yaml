@@ -10,6 +10,6 @@ spec:
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
-      args: ['{{ include "zing.fullname" . }}:{{ .Values.service.port }}']
+      command: ['grpcurl']
+      args: ['-plaintext', '-d', '{}', '{{ include "zing.fullname" . }}:{{ .Values.service.port }}', 'list']
   restartPolicy: Never
