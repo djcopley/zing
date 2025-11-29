@@ -2,11 +2,11 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -39,8 +39,9 @@ func NewConfig() *Config {
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
 
-	v.SetDefault("server_host", "localhost")
-	v.SetDefault("server_port", 50051)
+	v.SetDefault("server_addr", "")
+	v.SetDefault("insecure", false)
+	v.SetDefault("plaintext", false)
 	v.SetDefault("token", "")
 
 	v.SetDefault("redis.addr", "")
@@ -65,9 +66,7 @@ func (c *Config) ConfigFileUsed() string {
 
 // ServerAddr returns the configured server address in the form of host:port
 func (c *Config) ServerAddr() string {
-	host := c.v.GetString("server_host")
-	port := c.v.GetInt("server_port")
-	return fmt.Sprintf("%s:%d", host, port)
+	return c.v.GetString("server_addr")
 }
 
 // SetServerAddr stores the server address
@@ -80,8 +79,7 @@ func (c *Config) SetServerAddr(addr string) error {
 	if err != nil {
 		return err
 	}
-	c.v.Set("server_host", host)
-	c.v.Set("server_port", portNum)
+	c.v.Set("server_addr", net.JoinHostPort(host, strconv.Itoa(portNum)))
 	return c.v.WriteConfig()
 }
 
@@ -96,6 +94,7 @@ func (c *Config) SetToken(token string) error {
 	return c.v.WriteConfig()
 }
 
+// Insecure allows bypassing TLS certificate verification
 func (c *Config) Insecure() bool {
 	return c.v.GetBool("insecure")
 }
@@ -105,6 +104,7 @@ func (c *Config) SetInsecure(insecure bool) error {
 	return c.v.WriteConfig()
 }
 
+// Plaintext allows connecting to the server without TLS
 func (c *Config) Plaintext() bool {
 	return c.v.GetBool("plaintext")
 }
