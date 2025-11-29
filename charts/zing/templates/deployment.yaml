@@ -44,35 +44,33 @@ spec:
             - name: grpc
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          {{- if .Values.app.redis.enabled }}
           env:
-            {{- if .Values.app.redis.host }}
+            {{- if .Values.zing.redis.host }}
             - name: REDIS_ADDR
-              value: {{ printf "%s:%v" .Values.app.redis.host (default 6379 .Values.app.redis.port) | quote }}
+              value: {{ printf "%s:%v" .Values.zing.redis.host (default 6379 .Values.zing.redis.port) | quote }}
             {{- end }}
-            {{- if .Values.app.redis.username }}
+            {{- if .Values.zing.redis.username }}
             - name: REDIS_USERNAME
-              value: {{ .Values.app.redis.username | quote }}
+              value: {{ .Values.zing.redis.username | quote }}
             {{- end }}
-            {{- if .Values.app.redis.existingSecret }}
+            {{- if .Values.zing.redis.existingSecret }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.app.redis.existingSecret }}
-                  key: {{ .Values.app.redis.existingSecretPasswordKey }}
-            {{- else if .Values.app.redis.password }}
+                  name: {{ .Values.zing.redis.existingSecret }}
+                  key: {{ .Values.zing.redis.existingSecretPasswordKey }}
+            {{- else if .Values.zing.redis.password }}
             - name: REDIS_PASSWORD
-              value: {{ .Values.app.redis.password | quote }}
+              value: {{ .Values.zing.redis.password | quote }}
             {{- end }}
-            {{- if hasKey .Values.app.redis "db" }}
+            {{- if hasKey .Values.zing.redis "db" }}
             - name: REDIS_DB
-              value: {{ .Values.app.redis.db | quote }}
+              value: {{ .Values.zing.redis.db | quote }}
             {{- end }}
-            {{- if hasKey .Values.app.redis "tls" }}
+            {{- if hasKey .Values.zing.redis "tls" }}
             - name: REDIS_TLS
-              value: {{ ternary "true" "false" .Values.app.redis.tls | quote }}
+              value: {{ ternary "true" "false" .Values.zing.redis.tls | quote }}
             {{- end }}
-          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

@@ -115,10 +115,8 @@ resources: {}
 # connect to Redis without hardcoding addresses.
 # Note: This is separate from the bundled Bitnami Redis subchart values; use this
 # section to point the application at any Redis instance (internal or external).
-app:
+zing:
   redis:
-    # When enabled, the Deployment will inject REDIS_* env vars into the container.
-    enabled: false
     # If addr is empty, you can provide host and port to build REDIS_ADDR.
     host: ""
     port: 6379
@@ -138,12 +136,10 @@ app:
 livenessProbe:
   grpc:
     port: 50051
-    service: liveness
   initialDelaySeconds: 10
 readinessProbe:
   grpc:
     port: 50051
-    service: readiness
   initialDelaySeconds: 10
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
