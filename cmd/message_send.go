@@ -20,14 +20,14 @@ var messageSendCmd = &cobra.Command{
 	Short: "Send a message to a user",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		token := config.GetToken()
+		token := config.Token()
 		if token == "" {
 			return fmt.Errorf("authentication token is required; please login first")
 		}
 		ctx := client.AddAuthMetadata(cmd.Context(), token)
 
-		addr := config.GetServerAddr()
-		client, err := client.NewClient(addr, insecureFlag, plaintextFlag)
+		addr := config.ServerAddr()
+		client, err := client.NewClient(addr, config.Insecure(), config.Plaintext())
 		if err != nil {
 			return fmt.Errorf("unable to create client: %w", err)
 		}

@@ -12,14 +12,14 @@ var messageClearCmd = &cobra.Command{
 	Use:   "clear",
 	Short: "Clear all messages sent to you",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		token := config.GetToken()
+		token := config.Token()
 		if token == "" {
 			return fmt.Errorf("authentication token is required; please login first")
 		}
 		ctx := client.AddAuthMetadata(cmd.Context(), token)
 
-		addr := config.GetServerAddr()
-		c, err := client.NewClient(addr, insecureFlag, plaintextFlag)
+		addr := config.ServerAddr()
+		c, err := client.NewClient(addr, config.Insecure(), config.Plaintext())
 		if err != nil {
 			return fmt.Errorf("failed to connect to server: %s", err)
 		}

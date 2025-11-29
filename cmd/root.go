@@ -14,16 +14,12 @@ var rootCmd = &cobra.Command{
 
 // Global connection flags
 var (
-	insecureFlag  bool
-	plaintextFlag bool
-	config        *configpkg.Config
+	config *configpkg.Config
 )
 
 func init() {
 	config = configpkg.NewConfig()
 
-	rootCmd.PersistentFlags().BoolVarP(&insecureFlag, "insecure", "k", false, "Allow invalid TLS certificates (skip verification)")
-	rootCmd.PersistentFlags().BoolVarP(&plaintextFlag, "plaintext", "p", false, "Use plaintext connection (no TLS)")
 }
 
 func Execute() {

@@ -45,10 +45,10 @@ func runServe(cmd *cobra.Command, args []string) error {
 	}
 
 	r := redis.NewClient(&redis.Options{
-		Addr:     config.GetRedisAddr(),
-		Username: config.GetRedisUsername(),
-		Password: config.GetRedisPassword(),
-		DB:       config.GetRedisDB(),
+		Addr:     config.RedisAddr(),
+		Username: config.RedisUsername(),
+		Password: config.RedisPassword(),
+		DB:       config.RedisDB(),
 	})
 
 	userRepo := repository.NewRedisUserRepository(r)

@@ -10,7 +10,11 @@ import (
 	"golang.org/x/term"
 )
 
-var username string
+var (
+	username      string
+	insecureFlag  bool
+	plaintextFlag bool
+)
 
 var loginCmd = &cobra.Command{
 	Use:   "login [server]",
@@ -55,9 +59,14 @@ var loginCmd = &cobra.Command{
 		if err := config.SetToken(tokenStr); err != nil {
 			return fmt.Errorf("failed to save token: %s", err)
 		}
-
 		if err := config.SetServerAddr(addr); err != nil {
 			return fmt.Errorf("failed to save server address: %s", err)
+		}
+		if err := config.SetPlaintext(plaintextFlag); err != nil {
+			return fmt.Errorf("failed to save plaintext setting: %s", err)
+		}
+		if err := config.SetInsecure(insecureFlag); err != nil {
+			return fmt.Errorf("failed to save insecure setting: %s", err)
 		}
 
 		_, err = fmt.Fprintln(cmd.OutOrStdout(), "Login successful. Token stored.")
@@ -68,4 +77,6 @@ var loginCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(loginCmd)
 	loginCmd.Flags().StringVarP(&username, "username", "u", "", "Username to login with")
+	rootCmd.PersistentFlags().BoolVarP(&plaintextFlag, "plaintext", "p", false, "Use plaintext connection (no TLS)")
+	rootCmd.PersistentFlags().BoolVarP(&insecureFlag, "insecure", "k", false, "Allow invalid TLS certificates (skip verification)")
 }
