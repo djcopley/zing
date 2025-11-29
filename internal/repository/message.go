@@ -31,8 +31,11 @@ func (r *RedisMessageRepository) Read(ctx context.Context, userId string) ([]*mo
 	// Returns an array of strings (bulk replies)
 	lua := `
 local k = KEYS[1]
-local vals = redis.call('LRANGE', k, 0, -)
-redis.call('DEL', k)
+if redis.call("EXISTS", k) == 0 then
+    return {}
+end
+local vals = redis.call("LRANGE", k, 0, -1)
+redis.call("DEL", k)
 return vals
 `
 	res, err := r.r.Eval(ctx, lua, []string{key}).Result()
