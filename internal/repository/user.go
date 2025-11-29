@@ -1,13 +1,14 @@
 package repository
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"strings"
+    "context"
+    "errors"
+    "fmt"
+    "strings"
 
-	"github.com/djcopley/zing/internal/model"
-	"github.com/redis/go-redis/v9"
+    "github.com/djcopley/zing/internal/model"
+    "github.com/redis/go-redis/v9"
+    "golang.org/x/crypto/bcrypt"
 )
 
 type RedisUserRepository struct {
@@ -55,18 +56,15 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 }
 
 func NewTestInMemoryUserRepository() *InMemoryUserRepository {
-	imur := &InMemoryUserRepository{
-		users: make(map[string]*model.User),
-	}
-	imur.users["user1"] = &model.User{
-		Username: "user1",
-		Password: "pass",
-	}
-	imur.users["user2"] = &model.User{
-		Username: "user2",
-		Password: "pass",
-	}
-	return imur
+    imur := &InMemoryUserRepository{
+        users: make(map[string]*model.User),
+    }
+    // Seed with users whose passwords are bcrypt-hashed versions of "pass"
+    hash1, _ := bcrypt.GenerateFromPassword([]byte("pass"), bcrypt.DefaultCost)
+    hash2, _ := bcrypt.GenerateFromPassword([]byte("pass"), bcrypt.DefaultCost)
+    imur.users["user1"] = &model.User{Username: "user1", Password: string(hash1)}
+    imur.users["user2"] = &model.User{Username: "user2", Password: string(hash2)}
+    return imur
 }
 
 type InMemoryUserRepository struct {

@@ -42,6 +42,9 @@ var loginCmd = &cobra.Command{
 		}
 		password := string(passwordBytes)
 
+		// Move to a new line after hidden input before proceeding
+		_, _ = fmt.Fprintln(cmd.OutOrStdout())
+
 		addr := args[0]
 		client, err := client.NewClient(addr, insecureFlag, plaintextFlag)
 		if err != nil {

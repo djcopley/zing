@@ -8,6 +8,9 @@ import "internal/api/message.proto";
 option go_package = "github.com/djcopley/zing/interal/api";
 
 service Zing {
+  // Register creates a new account and returns a token
+  rpc Register(LoginRequest) returns (LoginResponse);
+
   // Login takes the username and password and returns a token for accessing messages
   rpc Login(LoginRequest) returns (LoginResponse);
 

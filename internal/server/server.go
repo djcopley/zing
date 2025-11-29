@@ -35,13 +35,23 @@ func (s *Server) ClearMessages(ctx context.Context, request *api.ClearMessagesRe
 }
 
 func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.LoginResponse, error) {
-	username := request.Username
-	password := request.Password
-	token, err := s.authService.Login(context.TODO(), username, password)
-	if err != nil {
-		return &api.LoginResponse{}, err
-	}
-	return &api.LoginResponse{Token: token}, nil
+    username := request.Username
+    password := request.Password
+    token, err := s.authService.Login(context.TODO(), username, password)
+    if err != nil {
+        return &api.LoginResponse{}, err
+    }
+    return &api.LoginResponse{Token: token}, nil
+}
+
+func (s *Server) Register(ctx context.Context, request *api.LoginRequest) (*api.LoginResponse, error) {
+    username := request.Username
+    password := request.Password
+    token, err := s.authService.Register(ctx, username, password)
+    if err != nil {
+        return &api.LoginResponse{}, err
+    }
+    return &api.LoginResponse{Token: token}, nil
 }
 
 func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.LogoutResponse, error) {
