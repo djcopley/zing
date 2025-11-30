@@ -75,36 +75,4 @@ func NewRedisMessageRepository(r *redis.Client) *RedisMessageRepository {
 	}
 }
 
-func NewInMemoryMessageRepository() *InMemoryMessageRepository {
-	return &InMemoryMessageRepository{
-		messages: make(map[string][]*model.Message),
-	}
-}
-
-type InMemoryMessageRepository struct {
-	messages map[string][]*model.Message
-}
-
-func (m *InMemoryMessageRepository) Create(_ context.Context, message *model.Message) error {
-	messages := m.messages[message.Metadata.To.Username]
-	messages = append(messages, message)
-	m.messages[message.Metadata.To.Username] = messages
-	return nil
-}
-
-func (m *InMemoryMessageRepository) Read(_ context.Context, userId string) ([]*model.Message, error) {
-	msgs, ok := m.messages[userId]
-	if !ok {
-		// If the user has no messages yet, return an empty slice instead of an error
-		return []*model.Message{}, nil
-	}
-	return msgs, nil
-}
-
-func (m *InMemoryMessageRepository) Clear(_ context.Context, userId string) error {
-	// Set to an empty slice to preserve key existence semantics
-	m.messages[userId] = []*model.Message{}
-	return nil
-}
-
 func messageKey(username string) string { return "messages:" + username }
