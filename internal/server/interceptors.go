@@ -58,11 +58,15 @@ func NewAuthInterceptor(authService *service.AuthenticationService) grpc.UnarySe
 		}
 
 		bearer := authHeaders[0]
-		token := strings.Split(bearer, " ")[1]
+		parts := strings.Split(bearer, " ")
+		if len(parts) < 2 {
+			return nil, status.Error(codes.Unauthenticated, "authorization header format must be: Bearer <token>")
+		}
+		token := parts[1]
 
 		user, err := authService.ValidateToken(context.TODO(), token)
 		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, "invalid token")
+			return nil, status.Error(codes.Unauthenticated, "your session has expired. please log in again")
 		}
 
 		ctx = context.WithValue(ctx, userContextKey{}, user)

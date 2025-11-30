@@ -5,9 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/djcopley/zing/internal/model"
 	"github.com/redis/go-redis/v9"
+)
+
+const (
+	// sessionTTL defines how long a session is valid for.
+	sessionTTL = time.Hour * 24 * 7 // 1 week
 )
 
 type RedisSessionRepository struct {
@@ -22,7 +28,8 @@ func (r RedisSessionRepository) Create(ctx context.Context, token string, user *
 	if err != nil {
 		return err
 	}
-	if err := r.r.Set(ctx, sessionKey(token), b, 0).Err(); err != nil {
+	// Set the session with a TTL so it expires automatically in Redis
+	if err := r.r.Set(ctx, sessionKey(token), b, sessionTTL).Err(); err != nil {
 		return err
 	}
 	return nil
@@ -54,39 +61,6 @@ func NewRedisSessionRepository(r *redis.Client) *RedisSessionRepository {
 	return &RedisSessionRepository{
 		r: r,
 	}
-}
-
-type InMemorySessionRepository struct {
-	// username to session token
-	sessions map[string]*model.User
-}
-
-func NewInMemorySessionRepository() *InMemorySessionRepository {
-	return &InMemorySessionRepository{
-		sessions: make(map[string]*model.User),
-	}
-}
-
-func (r *InMemorySessionRepository) Create(ctx context.Context, token string, user *model.User) error {
-	if user == nil {
-		return fmt.Errorf("user is nil")
-	}
-	r.sessions[token] = user
-	return nil
-}
-
-func (r *InMemorySessionRepository) Read(ctx context.Context, token string) (*model.User, error) {
-	if user, ok := r.sessions[token]; ok {
-		return user, nil
-	}
-	return nil, fmt.Errorf("user not found")
-}
-
-func (r *InMemorySessionRepository) Delete(ctx context.Context, token string) error {
-	if _, ok := r.sessions[token]; ok {
-		delete(r.sessions, token)
-	}
-	return nil
 }
 
 func sessionKey(token string) string { return "session:" + token }
