@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   zing:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2025-12-01T06:40:36.363527522Z"
+    dependencies:
+    - name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: '*'
+    description: A Helm chart for Kubernetes
+    digest: 36ef615eeaf6573f59cf3523e1d0056b5b47c01a7730c8cfcb14e3216b13e2b5
+    name: zing
+    type: application
+    urls:
+    - https://github.com/djcopley/zing/releases/download/zing-0.1.2/zing-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-12-01T06:14:26.740505069Z"
     dependencies:
@@ -29,4 +43,4 @@ entries:
     urls:
     - https://github.com/djcopley/zing/releases/download/zing-0.1.0/zing-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-01T06:14:26.740522091Z"
+generated: "2025-12-01T06:40:36.36354774Z"
