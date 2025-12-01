@@ -5,7 +5,7 @@ package zing;
 option go_package = "github.com/djcopley/zing/internal/api";
 
 import "google/protobuf/timestamp.proto";
-import "internal/api/user.proto";
+import "user.proto";
 
 message Message {
   MessageMetadata metadata = 1;

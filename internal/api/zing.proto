@@ -1,11 +1,11 @@
 syntax = "proto3";
 
+import "user.proto";
+import "message.proto";
+
 package zing;
 
-import "internal/api/user.proto";
-import "internal/api/message.proto";
-
-option go_package = "github.com/djcopley/zing/interal/api";
+option go_package = "github.com/djcopley/zing/internal/api";
 
 service Zing {
   // Register creates a new account and returns a token
