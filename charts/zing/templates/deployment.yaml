@@ -45,10 +45,8 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
-            {{- if .Values.zing.redis.host }}
             - name: REDIS_ADDR
-              value: {{ printf "%s:%v" .Values.zing.redis.host (default 6379 .Values.zing.redis.port) | quote }}
-            {{- end }}
+              value: {{ printf "%s:%v" (include "zing.redisHostname" $) (default 6379 .Values.zing.redis.port) | quote }}
             {{- if .Values.zing.redis.username }}
             - name: REDIS_USERNAME
               value: {{ .Values.zing.redis.username | quote }}

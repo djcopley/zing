@@ -6,6 +6,23 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Resolve the Redis master Service hostname for the application to connect to.
+Order of precedence:
+1) Explicit .Values.zing.redis.host
+2) Bitnami Redis subchart fullnameOverride + "-master"
+3) Default: <release-name>-redis-master
+*/}}
+{{- define "zing.redisHostname" -}}
+{{- if .Values.zing.redis.host -}}
+{{ .Values.zing.redis.host }}
+{{- else if .Values.redis.fullnameOverride -}}
+{{ printf "%s-master" .Values.redis.fullnameOverride }}
+{{- else -}}
+{{ printf "%s-redis-master" .Release.Name }}
+{{- end -}}
+{{- end }}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.

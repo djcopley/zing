@@ -124,7 +124,7 @@ zing:
     username: ""
     # Provide the password via an existing Secret if possible (recommended).
     existingSecret: ""
-    existingSecretPasswordKey: "redis-password"
+    existingSecretPasswordKey: ""
     # Alternatively, set a plaintext password here (not recommended for production).
     password: ""
     # Database index number.
